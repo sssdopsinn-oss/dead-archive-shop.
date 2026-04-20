@@ -65,7 +65,7 @@
     }
     .price { color: #c00; font-size: 1.4em; font-weight: bold; }
 
-    /* Модальное окно просмотра товара */
+    /* Модальное окно с галереей */
     .modal {
       display: none;
       position: fixed;
@@ -79,37 +79,49 @@
     .modal-content {
       background: #1a1a1a;
       border-radius: 16px;
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 92%;
       overflow: hidden;
-      text-align: center;
     }
-    .modal img {
+    .modal-gallery {
+      position: relative;
+    }
+    .modal-gallery img {
       width: 100%;
       max-height: 55vh;
       object-fit: contain;
+      display: none;
+    }
+    .modal-gallery img.active {
+      display: block;
     }
     .modal-info {
       padding: 20px;
-    }
-    .modal button {
-      width: 100%;
-      padding: 15px;
-      background: #c00;
-      border: none;
-      color: white;
-      border-radius: 10px;
-      font-size: 1.1em;
-      margin-top: 10px;
+      text-align: center;
     }
     .close {
       position: absolute;
       top: 15px;
       right: 20px;
+      font-size: 32px;
+      color: white;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .prev, .next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
       font-size: 30px;
-      color: #fff;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
       cursor: pointer;
     }
+    .prev { left: 10px; }
+    .next { right: 10px; }
   </style>
 </head>
 <body>
@@ -146,11 +158,15 @@
 
   <footer>© 2026 Dead Archive Shop</footer>
 
-  <!-- Модальное окно -->
+  <!-- Модальное окно с галереей -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">×</span>
-      <img id="modal-img" src="">
+      
+      <div class="modal-gallery" id="gallery">
+        <!-- Фото будут добавляться сюда через JS -->
+      </div>
+
       <div class="modal-info">
         <h2 id="modal-name"></h2>
         <p class="price" id="modal-price"></p>
@@ -167,10 +183,37 @@
     let currentProduct = null;
 
     const products = [
-      {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:"https://kappa.lol/cLC3CA.jpg"},
-      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:"https://kappa.lol/IEzPpD.jpg"},
-      {id:3, name:"Джинсы Acne Studios", price:80, img:"https://kappa.lol/6aKBo5.jpg"},
-      {id:4, name:"Худи Vetements Polizei", price:90, img:"https://kappa.lol/aCimHO.jpg"}
+      {
+        id:1,
+        name:"Футболка Mowalola Double Sweat",
+        price:40,
+        images: [
+          "https://kappa.lol/cLC3CA.jpg",
+          "https://kappa.lol/cLC3CA.jpg",   // добавь сюда другие фото этого товара
+          "https://kappa.lol/cLC3CA.jpg"
+        ]
+      },
+      {
+        id:2,
+        name:"Зип-Худи Grailz Project G/R",
+        price:75,
+        images: [
+          "https://kappa.lol/IEzPpD.jpg",
+          "https://kappa.lol/IEzPpD.jpg"
+        ]
+      },
+      {
+        id:3,
+        name:"Джинсы Acne Studios",
+        price:80,
+        images: ["https://kappa.lol/6aKBo5.jpg"]
+      },
+      {
+        id:4,
+        name:"Худи Vetements Polizei",
+        price:90,
+        images: ["https://kappa.lol/aCimHO.jpg"]
+      }
     ];
 
     function renderProducts() {
@@ -180,7 +223,7 @@
         const div = document.createElement('div');
         div.className = 'product';
         div.innerHTML = `
-          <img src="${p.img}" onclick="showProduct(${p.id})">
+          <img src="${p.images[0]}" onclick="showProduct(${p.id})">
           <div class="product-info">
             <h3>${p.name}</h3>
             <p class="price">${p.price}$</p>
@@ -191,14 +234,51 @@
       });
     }
 
+    let currentImageIndex = 0;
+
     function showProduct(id) {
       currentProduct = products.find(p => p.id === id);
       if (!currentProduct) return;
 
-      document.getElementById('modal-img').src = currentProduct.img;
+      currentImageIndex = 0;
+      renderGallery();
       document.getElementById('modal-name').textContent = currentProduct.name;
       document.getElementById('modal-price').textContent = currentProduct.price + '$';
       document.getElementById('modal').style.display = 'flex';
+    }
+
+    function renderGallery() {
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = '';
+
+      currentProduct.images.forEach((imgSrc, index) => {
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        if (index === currentImageIndex) img.classList.add('active');
+        gallery.appendChild(img);
+      });
+
+      // Добавляем кнопки переключения, если фото больше 1
+      if (currentProduct.images.length > 1) {
+        const prev = document.createElement('button');
+        prev.className = 'prev';
+        prev.innerHTML = '‹';
+        prev.onclick = () => changeImage(-1);
+        gallery.appendChild(prev);
+
+        const next = document.createElement('button');
+        next.className = 'next';
+        next.innerHTML = '›';
+        next.onclick = () => changeImage(1);
+        gallery.appendChild(next);
+      }
+    }
+
+    function changeImage(direction) {
+      currentImageIndex += direction;
+      if (currentImageIndex < 0) currentImageIndex = currentProduct.images.length - 1;
+      if (currentImageIndex >= currentProduct.images.length) currentImageIndex = 0;
+      renderGallery();
     }
 
     function closeModal() {
@@ -228,7 +308,7 @@
       const container = document.getElementById('cart-items');
       container.innerHTML = '';
       let total = 0;
-      cart.forEach((item, index) => {
+      cart.forEach(item => {
         total += item.price;
         const div = document.createElement('div');
         div.className = 'cart-item';
