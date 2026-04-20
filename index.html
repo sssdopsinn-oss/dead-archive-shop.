@@ -22,7 +22,6 @@
       background: rgba(10, 10, 10, 0.82);
       z-index: -1;
     }
-
     header {
       background: rgba(17, 17, 17, 0.95);
       backdrop-filter: blur(10px);
@@ -164,21 +163,18 @@
     <p style="text-align:center; font-size:1.25em;">Только топовые реплики Archive и нефор шмота</p>
   </div>
 
-  <!-- Магазин с категориями и поиском -->
+  <!-- Магазин -->
   <div id="shop" class="section">
     <h2 style="color:#ff3333; margin-bottom:15px;">Магазин</h2>
-
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Поиск товара..." onkeyup="filterProducts()">
     </div>
-
     <div class="tabs">
       <button onclick="filterByCategory('all')" class="active">Все</button>
       <button onclick="filterByCategory('hoodie')">Худи / Зипы</button>
       <button onclick="filterByCategory('tshirt')">Футболки</button>
       <button onclick="filterByCategory('jeans')">Джинсы</button>
     </div>
-
     <div class="product-grid" id="products"></div>
   </div>
 
@@ -207,9 +203,9 @@
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, category:"tshirt", img:"https://kappa.lol/cLC3CA.jpg"},
       {id:2, name:"Зип-Худи Grailz Project G/R", price:75, category:"hoodie", img:"https://kappa.lol/IEzPpD.jpg"},
       {id:3, name:"Джинсы Acne Studios", price:80, category:"jeans", img:"https://kappa.lol/6aKBo5.jpg"},
-      {id:4, name:"Худи Vetements Polizei", price:90, category:"hoodie", img:"https://kappa.lol/fmMcv4.jpg"}
-      {id:5, name:"Штаны Maison Margiela", price:90, category:"hoodie", img:"https://kappa.lol/upj6ke.jpg"}
-      {id:6, name:"Шорты Acne Studios", price:90, category:"hoodie", img:"https://kappa.lol/UDQ5kU.jpg"}
+      {id:4, name:"Худи Vetements Polizei", price:90, category:"hoodie", img:"https://kappa.lol/aCimHO.jpg"},
+      {id:5, name:"Штаны Maison Margiela", price:90, category:"jeans", img:"https://kappa.lol/upj6ke.jpg"},
+      {id:6, name:"Шорты Acne Studios", price:90, category:"jeans", img:"https://kappa.lol/UDQ5kU.jpg"},
       {id:7, name:"Худи Acne Studios Stockholm 1996", price:90, category:"hoodie", img:"https://kappa.lol/WMQfJK.jpg"}
     ];
 
@@ -241,7 +237,6 @@
       if (term) {
         filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
       }
-
       renderProducts(filtered);
     }
 
@@ -329,12 +324,14 @@
     function showSection(section) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(section).classList.add('active');
+      
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('nav button').forEach(btn => {
         if (btn.getAttribute('onclick').includes(`'${section}'`)) btn.classList.add('active');
       });
     }
 
+    // Инициализация
     renderProducts(products);
     showSection('home');
   </script>
