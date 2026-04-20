@@ -206,7 +206,6 @@
       if (saved) {
         products = JSON.parse(saved);
       } else {
-        // Если в админке ничего нет — используем твои товары по умолчанию
         products = [
           {id:1, name:"Футболка Mowalola Double Sweat", price:40, category:"tshirt", img:"https://kappa.lol/cLC3CA.jpg"},
           {id:2, name:"Зип-Худи Grailz Project G/R", price:75, category:"hoodie", img:"https://kappa.lol/IEzPpD.jpg"},
@@ -342,7 +341,7 @@
       });
     }
 
-    // Загружаем товары из админки при запуске
+    // Инициализация
     loadProducts();
     showSection('home');
   </script>
