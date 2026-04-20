@@ -14,7 +14,7 @@
     }
     header {
       background: #111;
-      padding: 25px;
+      padding: 20px;
       text-align: center;
       border-bottom: 5px solid #c00;
     }
@@ -85,11 +85,10 @@
       color: white;
       border-radius: 8px;
       margin-top: 10px;
-      font-weight: bold;
     }
     footer {
       text-align: center;
-      padding: 40px 20px;
+      padding: 40px;
       color: #555;
     }
   </style>
@@ -107,23 +106,20 @@
     <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
   </nav>
 
-  <!-- Главная -->
   <div id="home" class="section active">
     <h2 style="text-align:center; color:#c00; margin:60px 0 30px;">ДОБРО ПОЖАЛОВАТЬ</h2>
     <p style="text-align:center; font-size:1.2em;">Реплики Archive шмота</p>
   </div>
 
-  <!-- Магазин -->
   <div id="shop" class="section">
     <h2 style="color:#c00; margin-bottom:25px;">Каталог шмота</h2>
     <div class="product-grid" id="products"></div>
   </div>
 
-  <!-- Корзина -->
   <div id="cart" class="section">
     <h2 style="color:#c00;">Твоя корзина</h2>
     <div id="cart-items"></div>
-    <h3 style="margin:25px 0 10px;">Итого: <span id="total">0</span>$</h3>
+    <h3>Итого: <span id="total">0</span>$</h3>
     <button onclick="checkout()" style="width:100%; padding:16px; background:#c00; border:none; color:white; border-radius:10px; font-size:1.1em;">
       Оформить заказ
     </button>
@@ -157,7 +153,7 @@
           <div class="product-info">
             <h3>${p.name}</h3>
             <p class="price">${p.price}$</p>
- <button class="buy" onclick="addToCart(${p.id})">В корзину</button>
+            <button class="buy" onclick="addToCart(${p.id})">В корзину</button>
           </div>
         `;
         container.appendChild(div);
@@ -182,32 +178,36 @@
         total += item.price;
         const div = document.createElement('div');
         div.className = 'cart-item';
-        div.innerHTML = ${item.name} — ${item.price}$;
+        div.innerHTML = `${item.name} — ${item.price}$`;
         container.appendChild(div);
       });
       document.getElementById('total').textContent = total;
     }
 
     function checkout() {
-      if (cart.length === 0) {
-        Telegram.WebApp.showAlert("Корзина пустая");
-        return;
-      }
-      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения.");
+      if (cart.length === 0) return;
+      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!");
       cart = [];
       updateCart();
     }
 
     function showSection(section) {
+      // Скрываем все разделы
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      // Показываем нужный
       document.getElementById(section).classList.add('active');
+      
+      // Убираем active у всех кнопок
       document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      // Добавляем active нужной кнопке
       document.querySelectorAll('nav button').forEach(b => {
-        if (b.getAttribute('onclick').includes(section)) b.classList.add('active');
+        if (b.getAttribute('onclick').includes(`'${section}'`)) {
+          b.classList.add('active');
+        }
       });
     }
 
-    // Запуск
+    // Запуск сайта
     renderProducts();
     showSection('home');
   </script>
