@@ -16,6 +16,7 @@
       background: var(--dark);
       color: #ddd;
       font-family: system-ui, sans-serif;
+      line-height: 1.5;
     }
     header {
       background: linear-gradient(#1a1a1a, #0a0a0a);
@@ -23,7 +24,11 @@
       text-align: center;
       border-bottom: 3px solid var(--red);
     }
-    h1 { color: var(--red); font-size: 2.2em; letter-spacing: 2px; }
+    h1 {
+      color: var(--red);
+      font-size: 2.2em;
+      letter-spacing: 2px;
+    }
     nav {
       display: flex;
       justify-content: center;
@@ -46,8 +51,10 @@
       color: white;
       border-color: var(--red);
     }
+
     .section { display: none; padding: 20px; min-height: 80vh; }
     .section.active { display: block; }
+
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -64,8 +71,12 @@
       height: 200px;
       object-fit: cover;
     }
-    .product-info { padding: 12px; text-align: center; }
+    .product-info {
+      padding: 12px;
+      text-align: center;
+    }
     .price { color: var(--red); font-weight: bold; font-size: 1.3em; }
+
     button.buy {
       background: var(--red);
       color: white;
@@ -76,6 +87,7 @@
       border-radius: 6px;
       font-weight: bold;
     }
+
     .cart-item {
       display: flex;
       justify-content: space-between;
@@ -84,10 +96,12 @@
       margin: 10px 0;
       border-radius: 8px;
     }
+
     footer {
       text-align: center;
       padding: 25px;
       color: #666;
+      font-size: 0.9em;
     }
   </style>
 </head>
@@ -123,7 +137,7 @@
     <h2 style="color:#c00;">Твоя корзина</h2>
     <div id="cart-items"></div>
     <h3 style="margin-top:20px;">Итого: <span id="total">0</span>$</h3>
-    <button style="width:100%; padding:15px; background:#c00; margin-top:20px; font-size:1.1em;" onclick="checkout()">Оформить заказ</button>
+    <button style="width:100%; padding:15px; background:#c00; margin-top:20px;" onclick="checkout()">Оформить заказ</button>
   </div>
 
   <!-- О нас -->
@@ -188,33 +202,37 @@
       container.innerHTML = '';
       let total = 0;
 
-      cart.forEach(item => {
+      cart.forEach((item, index) => {
         total += item.price;
         const div = document.createElement('div');
         div.className = 'cart-item';
-        div.innerHTML = <span>${item.name} — ${item.price}$</span>;
+        div.innerHTML = `
+          <span>${item.name} — ${item.price}$</span>
+          <button onclick="removeFromCart(${index})" style="color:red;background:none;border:none;">✕</button>
+        `;
         container.appendChild(div);
       });
 
       document.getElementById('total').textContent = total;
     }
 
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
     function checkout() {
       if (cart.length === 0) return;
 
-      const orderData = {
+      Telegram.WebApp.sendData(JSON.stringify({
         action: "new_order",
-        user_id: Telegram.WebApp.initDataUnsafe.user.id,
-        username: Telegram.WebApp.initDataUnsafe.user.username || "Без username",
-        first_name: Telegram.WebApp.initDataUnsafe.user.first_name,
         order: cart,
-        total: document.getElementById('total').textContent
-      };
+        total: document.getElementById('total').textContent,
+        user: Telegram.WebApp.initDataUnsafe.user
+      }));
 
-      Telegram.WebApp.sendData(JSON.stringify(orderData));
-
-      Telegram.WebApp.showAlert("✅ Заказ отправлен!\n\nМенеджер скоро свяжется с тобой.");
-
+      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения от бота.");
+      
       cart = [];
       updateCart();
     }
@@ -228,7 +246,6 @@
       if (activeBtn) activeBtn.classList.add('active');
     }
 
-    // Инициализация
     renderProducts();
     showSection('home');
   </script>
