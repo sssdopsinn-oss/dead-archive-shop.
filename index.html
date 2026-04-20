@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEAD CULT SHOP • Реплики Нефор Шмот</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --red: #c00;
+      --dark: #0a0a0a;
+      --gray: #1a1a1a;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--dark);
+      color: #ddd;
+      font-family: system-ui, sans-serif;
+      line-height: 1.5;
+    }
+    header {
+      background: linear-gradient(#1a1a1a, #0a0a0a);
+      padding: 15px;
+      text-align: center;
+      border-bottom: 3px solid var(--red);
+    }
+    h1 {
+      color: var(--red);
+      font-size: 2.2em;
+      letter-spacing: 2px;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 15px;
+      background: #111;
+    }
+    nav button {
+      background: #1a1a1a;
+      color: #ddd;
+      border: 2px solid #333;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    nav button.active, nav button:hover {
+      background: var(--red);
+      color: white;
+      border-color: var(--red);
+    }
+
+    .section { display: none; padding: 20px; min-height: 80vh; }
+    .section.active { display: block; }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+    }
+    .product {
+      background: var(--gray);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #333;
+    }
+    .product img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 12px;
+      text-align: center;
+    }
+    .product h3 { font-size: 1.1em; margin-bottom: 5px; }
+    .price { color: var(--red); font-weight: bold; font-size: 1.2em; }
+
+    button.buy {
+      background: var(--red);
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      background: #1a1a1a;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>DEAD CULT</h1>
+    <p>Нефор реплики • Культовая шмотка</p>
+  </header>
+
+  <nav>
+    <button onclick="showSection('home')" class="active">Главная</button>
+    <button onclick="showSection('shop')">Магазин</button>
+    <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
+    <button onclick="showSection('profile')">Профиль</button>
+    <button onclick="showSection('about')">О нас</button>
+    <button onclick="showSection('support')">Поддержка</button>
+  </nav>
+
+  <!-- Главная -->
+  <div id="home" class="section active">
+    <h2 style="text-align:center; color:#c00; margin:30px 0;">ДОБРО ПОЖАЛОВАТЬ В КУЛЬТ</h2>
+    <p style="text-align:center; font-size:1.1em;">Реплики топового нефор шмота по нормальным ценам.<br>То, что ты видел в канале — теперь на сайте.</p>
+  </div>
+
+  <!-- Магазин -->
+  <div id="shop" class="section">
+    <h2 style="color:#c00; margin-bottom:20px;">Каталог шмота</h2>
+    <div class="product-grid" id="products"></div>
+  </div>
+
+  <!-- Корзина -->
+  <div id="cart" class="section">
+    <h2 style="color:#c00;">Твоя корзина</h2>
+    <div id="cart-items"></div>
+    <h3 style="margin-top:20px;">Итого: <span id="total">0</span> ₽</h3>
+    <button style="width:100%; padding:15px; background:#c00; margin-top:20px;" onclick="checkout()">Оформить заказ</button>
+  </div>
+
+  <!-- Профиль -->
+  <div id="profile" class="section">
+    <h2>Профиль</h2>
+    <p>Пока просто заглушка. Позже добавим историю заказов и т.д.</p>
+    <p>Telegram ID: <span id="tg-id">—</span></p>
+  </div>
+
+  <!-- О нас -->
+  <div id="about" class="section">
+    <h2>О нас</h2>
+[20.04.2026 14:37] Малый 🕸️🐈‍⬛: <p>Dead Cult Shop — это реплики нефорской и альтернативной одежды в тёмном стиле.<br>Качество выше цены. Культ растёт.</p>
+  </div>
+
+  <!-- Поддержка -->
+  <div id="support" class="section">
+    <h2>Поддержка</h2>
+    <p>Пиши в наш ТГ-канал или боту @твойбот</p>
+    <p>Ответим быстро, брат.</p>
+  </div>
+
+  <footer>
+    © 2026 Dead Cult Shop • Неформальный культ
+  </footer>
+
+  <script>
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+
+    let cart = [];
+
+    const products = [
+      {id:1, name:"Худи RED CULT", price:4490, img:"https://via.placeholder.com/300x300/330000/ffffff?text=RED+CULT"},
+      {id:2, name:"Футболка Dead Inside", price:2290, img:"https://via.placeholder.com/300x300/330000/ffffff?text=DEAD+INSIDE"},
+      {id:3, name:"Джинсы Wide Black", price:3190, img:"https://via.placeholder.com/300x300/111111/ffffff?text=WIDE+JEANS"},
+      {id:4, name:"Куртка Нефор Бомбер", price:5990, img:"https://via.placeholder.com/300x300/330000/ffffff?text=BOMBER"},
+      // Добавляй сюда свои реальные товары
+    ];
+
+    function renderProducts() {
+      const container = document.getElementById('products');
+      container.innerHTML = '';
+      products.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'product';
+        div.innerHTML = `
+          <img src="${p.img}" alt="${p.name}">
+          <div class="product-info">
+            <h3>${p.name}</h3>
+            <p class="price">${p.price} ₽</p>
+            <button class="buy" onclick="addToCart(${p.id})">В корзину</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      cart.push(product);
+      updateCart();
+      Telegram.WebApp.showToast(`Добавлено: ${product.name}`);
+    }
+
+    function updateCart() {
+      document.getElementById('cart-count').textContent = cart.length;
+      
+      const container = document.getElementById('cart-items');
+      container.innerHTML = '';
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        total += item.price;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <span>${item.name}</span>
+          <span>${item.price} ₽ <button onclick="removeFromCart(${index})" style="color:red;background:none;border:none;">✕</button></span>
+        `;
+        container.appendChild(div);
+      });
+
+      document.getElementById('total').textContent = total;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function checkout() {
+      if (cart.length === 0) return;
+      Telegram.WebApp.showAlert(`Заказ на ${document.getElementById('total').textContent} ₽ принят!\n\nСкоро свяжемся с тобой в ТГ.`);
+      cart = [];
+      updateCart();
+    }
+
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(section).classList.add('active');
+      
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      // можно добавить активный класс, но для простоты пока так
+    }
+
+    // Инициализация
+    renderProducts();
+    showSection('home');
+
+    // Показываем Telegram ID (для теста)
+    document.getElementById('tg-id').textContent = Telegram.WebApp.initDataUnsafe.user ? Telegram.WebApp.initDataUnsafe.user.id : 'Не в Telegram';
+  </script>
+</body>
+</html>
