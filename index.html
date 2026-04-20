@@ -165,8 +165,7 @@
   <footer>
     © 2026 Dead Archive Shop
   </footer>
-
-  <script>
+<script>
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
 
@@ -176,8 +175,7 @@
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:"https://kappa.lol/cLC3CA.jpg"},
       {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:"https://kappa.lol/IEzPpD.jpg"},
       {id:3, name:"Джинсы Acne Studios", price:80, img:"https://kappa.lol/6aKBo5.jpg"},
-      {id:4, name:"Худи Vetements Polizei", price:90, img:"https://kappa.lol/fmMcv4.jpg"},
-      // Добавляй новые товары сюда
+      {id:4, name:"Худи Vetements Polizei", price:90, img:"https://kappa.lol/aCimHO.jpg"}
     ];
 
     function renderProducts() {
@@ -219,8 +217,8 @@
         const div = document.createElement('div');
         div.className = 'cart-item';
         div.innerHTML = `
-          <span>${item.name}</span>
-          <span>${item.price}$ <button onclick="removeFromCart(${index})" style="color:red;background:none;border:none;">✕</button></span>
+          <span>${item.name} — ${item.price}$</span>
+          <button onclick="removeFromCart(${index})" style="color:red;background:none;border:none;font-size:18px;">✕</button>
         `;
         container.appendChild(div);
       });
@@ -235,28 +233,44 @@
 
     function checkout() {
       if (cart.length === 0) return;
-      Telegram.WebApp.showAlert(`Заказ на ${document.getElementById('total').textContent}$ принят!\n\nСкоро свяжемся с тобой в ТГ.`);
+
+      let message = "🛍 *Новый заказ!*\n\n";
+      message += 👤 Пользователь: @${Telegram.WebApp.initDataUnsafe.user.username || 'Без username'}\n;
+      message += 🆔 ID: ${Telegram.WebApp.initDataUnsafe.user.id}\n\n;
+      message += "📦 Товары:\n";
+
+      cart.forEach(item => {
+        message += • ${item.name} — ${item.price}$\n;
+      });
+
+      message += \n💰 Итого: ${document.getElementById('total').textContent}$;
+
+      // Отправляем заказ боту
+      Telegram.WebApp.sendData(JSON.stringify({
+        action: "new_order",
+        order: cart,
+        total: document.getElementById('total').textContent,
+        user: Telegram.WebApp.initDataUnsafe.user
+      }));
+
+      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения от @Dead_archive_bot");
+      
       cart = [];
       updateCart();
     }
 
     function showSection(section) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      const activeSection = document.getElementById(section);
-      if (activeSection) activeSection.classList.add('active');
+      document.getElementById(section).classList.add('active');
       
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-      const activeButton = Array.from(document.querySelectorAll('nav button')).find(btn => 
-        btn.getAttribute('onclick').includes(`'${section}'`)
+      const activeBtn = Array.from(document.querySelectorAll('nav button')).find(b => 
+        b.getAttribute('onclick').includes(`'${section}'`)
       );
-      if (activeButton) activeButton.classList.add('active');
+      if (activeBtn) activeBtn.classList.add('active');
     }
 
     // Инициализация
     renderProducts();
     showSection('home');
-
-    document.getElementById('tg-id').textContent = Telegram.WebApp.initDataUnsafe?.user?.id || 'Не в Telegram';
   </script>
-</body>
-</html>
