@@ -1,3 +1,116 @@
+  <p>Dead Archive Shop — магазин реплик лучшего качества и альтернативной одежды в тёмном стиле.<br>Качество выше цены.</p>
+  </div>
+
+  <!-- Поддержка -->
+  <div id="support" class="section">
+    <h2>Поддержка</h2>
+    <p>Пиши в наш ТГ-канал или Менеджеру @sssdopsinn</p>
+    <p>Ответим быстро.</p>
+  </div>
+
+  <footer>
+    © 2026 Dead Archive Shop
+  </footer>
+
+  <script>
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+
+    let cart = [];
+
+    const products = [
+      {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:"https://kappa.lol/cLC3CA.jpg"},
+      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:"https://kappa.lol/IEzPpD.jpg"},
+      {id:3, name:"Джинсы Acne Studios", price:80, img:"https://kappa.lol/6aKBo5.jpg"},
+      {id:4, name:"Худи Vetements Polizei", price:90, img:"https://kappa.lol/aCimHO.jpg"}
+    ];
+
+    function renderProducts() {
+      const container = document.getElementById('products');
+      container.innerHTML = '';
+      products.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'product';
+        div.innerHTML = `
+          <img src="${p.img}" alt="${p.name}">
+          <div class="product-info">
+            <h3>${p.name}</h3>
+            <p class="price">${p.price}$</p>
+            <button class="buy" onclick="addToCart(${p.id})">В корзину</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      if (product) {
+        cart.push(product);
+        updateCart();
+        Telegram.WebApp.showToast(`Добавлено: ${product.name}`);
+      }
+    }
+
+    function updateCart() {
+      document.getElementById('cart-count').textContent = cart.length;
+      
+      const container = document.getElementById('cart-items');
+      container.innerHTML = '';
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        total += item.price;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <span>${item.name} — ${item.price}$</span>
+          <button onclick="removeFromCart(${index})" style="color:red;background:none;border:none;font-size:18px;">✕</button>
+        `;
+        container.appendChild(div);
+      });
+
+      document.getElementById('total').textContent = total;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function checkout() {
+      if (cart.length === 0) return;
+
+      Telegram.WebApp.sendData(JSON.stringify({
+        action: "new_order",
+        order: cart,
+        total: document.getElementById('total').textContent,
+        user: Telegram.WebApp.initDataUnsafe.user
+      }));
+
+      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения от @Dead_archive_bot");
+      
+      cart = [];
+      updateCart();
+    }
+
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(section).classList.add('active');
+      
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('nav button')).find(b => 
+        b.getAttribute('onclick').includes(`'${section}'`)
+      );
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    // Инициализация
+    renderProducts();
+    showSection('home');
+  </script>
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -125,7 +238,7 @@
   <!-- Главная -->
   <div id="home" class="section active">
     <h2 style="text-align:center; color:#c00; margin:30px 0;">ДОБРО ПОЖАЛОВАТЬ В DEAD ARCHIVE SHOP</h2>
-    <p style="text-align:center; font-size:1.1em;">Реплики топового Archive / Opium шмота.<br>То, что ты видел в канале — теперь на сайте.</p>
+    <p style="text-align:center; font-size:1.1em;">Реплики топового Archive / Opium шмота по нормальным ценам.<br>То, что ты видел в канале — теперь на сайте.</p>
   </div>
 
   <!-- Магазин -->
@@ -138,7 +251,7 @@
   <div id="cart" class="section">
     <h2 style="color:#c00;">Твоя корзина</h2>
     <div id="cart-items"></div>
-    <h3 style="margin-top:20px;">Итого: <span id="total">0</span> $</h3>
+    <h3 style="margin-top:20px;">Итого: <span id="total">0</span>$</h3>
     <button style="width:100%; padding:15px; background:#c00; margin-top:20px;" onclick="checkout()">Оформить заказ</button>
   </div>
 
@@ -152,125 +265,3 @@
   <!-- О нас -->
   <div id="about" class="section">
     <h2>О нас</h2>
-  <p>Dead Archive Shop — магазин реплик лучшего качества и альтернативной одежды в тёмном стиле.<br>Качество выше цены.</p>
-  </div>
-
-  <!-- Поддержка -->
-  <div id="support" class="section">
-    <h2>Поддержка</h2>
-    <p>Пиши в наш ТГ-канал или Менеджеру @sssdopsinn</p>
-    <p>Ответим быстро.</p>
-  </div>
-
-  <footer>
-    © 2026 Dead Archive Shop
-  </footer> 
-  <script>
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
-
-    let cart = [];
-
-    const products = [
-      {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:"https://kappa.lol/cLC3CA.jpg"},
-      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:"https://kappa.lol/IEzPpD.jpg"},
-      {id:3, name:"Джинсы Acne Studios", price:80, img:"https://kappa.lol/6aKBo5.jpg"},
-      {id:4, name:"Худи Vetements Polizei", price:90, img:"https://kappa.lol/aCimHO.jpg"}
-    ];
-
-    function renderProducts() {
-      const container = document.getElementById('products');
-      container.innerHTML = '';
-      products.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'product';
-        div.innerHTML = `
-          <img src="${p.img}" alt="${p.name}">
-          <div class="product-info">
-            <h3>${p.name}</h3>
-            <p class="price">${p.price}$</p>
-            <button class="buy" onclick="addToCart(${p.id})">В корзину</button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function addToCart(id) {
-      const product = products.find(p => p.id === id);
-      if (product) {
-        cart.push(product);
-        updateCart();
-        Telegram.WebApp.showToast(`Добавлено: ${product.name}`);
-      }
-    }
-
-    function updateCart() {
-      document.getElementById('cart-count').textContent = cart.length;
-      
-      const container = document.getElementById('cart-items');
-      container.innerHTML = '';
-      let total = 0;
-
-      cart.forEach((item, index) => {
-        total += item.price;
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-        div.innerHTML = `
-          <span>${item.name} — ${item.price}$</span>
-          <button onclick="removeFromCart(${index})" style="color:red;background:none;border:none;font-size:18px;">✕</button>
-        `;
-        container.appendChild(div);
-      });
-
-      document.getElementById('total').textContent = total;
-    }
-
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      updateCart();
-    }
-
-    function checkout() {
-      if (cart.length === 0) return;
-
-      let message = "🛍 *Новый заказ!*\n\n";
-      message += 👤 Пользователь: @${Telegram.WebApp.initDataUnsafe.user.username || 'Без username'}\n;
-      message += 🆔 ID: ${Telegram.WebApp.initDataUnsafe.user.id}\n\n;
-      message += "📦 Товары:\n";
-
-      cart.forEach(item => {
-        message += • ${item.name} — ${item.price}$\n;
-      });
-
-      message += \n💰 Итого: ${document.getElementById('total').textContent}$;
-
-      // Отправляем заказ боту
-      Telegram.WebApp.sendData(JSON.stringify({
-        action: "new_order",
-        order: cart,
-        total: document.getElementById('total').textContent,
-        user: Telegram.WebApp.initDataUnsafe.user
-      }));
-
-      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения от @Dead_archive_bot");
-      
-      cart = [];
-      updateCart();
-    }
-
-    function showSection(section) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.getElementById(section).classList.add('active');
-      
-      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = Array.from(document.querySelectorAll('nav button')).find(b => 
-        b.getAttribute('onclick').includes(`'${section}'`)
-      );
-      if (activeBtn) activeBtn.classList.add('active');
-    }
-
-    // Инициализация
-    renderProducts();
-    showSection('home');
-  </script>
