@@ -198,16 +198,27 @@
 
     let cart = [];
     let currentCategory = 'all';
+    let products = [];
 
-    const products = [
-      {id:1, name:"Футболка Mowalola Double Sweat", price:40, category:"tshirt", img:"https://kappa.lol/cLC3CA.jpg"},
-      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, category:"hoodie", img:"https://kappa.lol/IEzPpD.jpg"},
-      {id:3, name:"Джинсы Acne Studios", price:80, category:"jeans", img:"https://kappa.lol/6aKBo5.jpg"},
-      {id:4, name:"Худи Vetements Polizei", price:90, category:"hoodie", img:"https://kappa.lol/PMWfto.jpg"},
-      {id:5, name:"Штаны Maison Margiela", price:90, category:"jeans", img:"https://kappa.lol/upj6ke.jpg"},
-      {id:6, name:"Шорты Acne Studios", price:90, category:"jeans", img:"https://kappa.lol/UDQ5kU.jpg"},
-      {id:7, name:"Худи Acne Studios Stockholm 1996", price:90, category:"hoodie", img:"https://kappa.lol/WMQfJK.jpg"}
-    ];
+    // Загружаем товары из админ-панели
+    function loadProducts() {
+      const saved = localStorage.getItem('deadarchive_products');
+      if (saved) {
+        products = JSON.parse(saved);
+      } else {
+        // Если в админке ничего нет — используем твои товары по умолчанию
+        products = [
+          {id:1, name:"Футболка Mowalola Double Sweat", price:40, category:"tshirt", img:"https://kappa.lol/cLC3CA.jpg"},
+          {id:2, name:"Зип-Худи Grailz Project G/R", price:75, category:"hoodie", img:"https://kappa.lol/IEzPpD.jpg"},
+          {id:3, name:"Джинсы Acne Studios", price:80, category:"jeans", img:"https://kappa.lol/6aKBo5.jpg"},
+          {id:4, name:"Худи Vetements Polizei", price:90, category:"hoodie", img:"https://kappa.lol/aCimHO.jpg"},
+          {id:5, name:"Штаны Maison Margiela", price:90, category:"jeans", img:"https://kappa.lol/upj6ke.jpg"},
+          {id:6, name:"Шорты Acne Studios", price:90, category:"jeans", img:"https://kappa.lol/UDQ5kU.jpg"},
+          {id:7, name:"Худи Acne Studios Stockholm 1996", price:90, category:"hoodie", img:"https://kappa.lol/WMQfJK.jpg"}
+        ];
+      }
+      filterProducts();
+    }
 
     function renderProducts(filtered) {
       const container = document.getElementById('products');
@@ -331,8 +342,8 @@
       });
     }
 
-    // Инициализация
-    renderProducts(products);
+    // Загружаем товары из админки при запуске
+    loadProducts();
     showSection('home');
   </script>
 </body>
