@@ -6,7 +6,7 @@
   <title>DEAD Archive SHOP</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    :root { --red: #c00; --dark: #0a0a0a; --gray: #1a1a1a; }
+    :root { --red: #c00; --dark: #0a0a0a; }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       background: url('https://kappa.lol/u39sUL.jpg') no-repeat center center fixed;
@@ -19,100 +19,140 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: rgba(10, 10, 10, 0.82);
+      background: rgba(10, 10, 10, 0.78);
       z-index: -1;
     }
 
     header {
       background: rgba(17, 17, 17, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 22px;
+      backdrop-filter: blur(12px);
+      padding: 25px;
       text-align: center;
-      border-bottom: 4px solid var(--red);
+      border-bottom: 5px solid var(--red);
     }
-    h1 { color: #ff3333; font-size: 2.5em; letter-spacing: 3px; }
+    h1 {
+      color: #ff3333;
+      font-size: 2.7em;
+      letter-spacing: 4px;
+      text-shadow: 0 0 25px rgba(255, 50, 50, 0.7);
+    }
 
     nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 15px;
+      gap: 12px;
+      padding: 18px;
       background: rgba(26, 26, 26, 0.95);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
       justify-content: center;
     }
     nav button {
-      padding: 13px 20px;
+      padding: 14px 24px;
       background: rgba(34, 34, 34, 0.9);
-      border: 2px solid #444;
+      border: 2px solid #555;
       color: #ddd;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
       font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    nav button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(192, 0, 0, 0.5);
     }
     nav button.active {
       background: var(--red);
       border-color: var(--red);
       color: white;
+      transform: scale(1.05);
     }
 
-    .section { display: none; padding: 20px; min-height: 75vh; }
+    .section { display: none; padding: 25px; min-height: 75vh; }
     .section.active { display: block; }
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 22px;
     }
     .product {
       background: rgba(26, 26, 26, 0.95);
-      border-radius: 16px;
+      border-radius: 18px;
       overflow: hidden;
       border: 1px solid rgba(192, 0, 0, 0.3);
+      transition: all 0.4s ease;
+    }
+    .product:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(192, 0, 0, 0.6);
     }
     .product img {
       width: 100%;
-      height: 220px;
+      height: 235px;
       object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .product:hover img {
+      transform: scale(1.08);
     }
     .product-info {
-      padding: 15px;
+      padding: 16px;
       text-align: center;
     }
-    .price { color: #ff3333; font-size: 1.45em; font-weight: bold; }
+    .price {
+      color: #ff3333;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
 
     button.buy {
       width: 100%;
-      padding: 14px;
+      padding: 15px;
       background: var(--red);
       border: none;
       color: white;
       border-radius: 10px;
-      margin-top: 10px;
+      margin-top: 12px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    button.buy:hover {
+      background: #ff5555;
+      transform: scale(1.05);
     }
     button.buy.added {
       background: #00c853;
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
 
     .cart-item {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      gap: 15px;
       background: rgba(26, 26, 26, 0.95);
-      padding: 14px;
-      margin: 10px 0;
-      border-radius: 12px;
+      padding: 15px;
+      margin: 12px 0;
+      border-radius: 14px;
+      border: 1px solid rgba(192, 0, 0, 0.3);
+    }
+    .cart-item img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 8px;
     }
 
-    footer { text-align: center; padding: 30px; color: #666; }
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+    }
   </style>
 </head>
 <body>
 
   <header>
     <h1>DEAD ARCHIVE</h1>
-    <p>Мы • Рядом с вами</p>
+    <p>реплика • культовая шмотка</p>
   </header>
 
   <nav>
@@ -123,22 +163,22 @@
 
   <!-- Главная -->
   <div id="home" class="section active">
-    <h2 style="text-align:center; color:#ff3333; margin:80px 0 30px; font-size:2.4em;">ДОБРО ПОЖАЛОВАТЬ В КУЛЬТ</h2>
-    <p style="text-align:center; font-size:1.25em;">Только топовые реплики Archive и нефор шмота</p>
+    <h2 style="text-align:center; color:#ff3333; margin:90px 0 40px; font-size:2.6em;">ДОБРО ПОЖАЛОВАТЬ В КУЛЬТ</h2>
+    <p style="text-align:center; font-size:1.3em;">Только топовые реплики Archive и нефор шмота</p>
   </div>
 
   <!-- Магазин -->
   <div id="shop" class="section">
-    <h2 style="color:#ff3333; margin-bottom:25px;">Каталог шмота</h2>
+    <h2 style="color:#ff3333; margin-bottom:30px;">Каталог шмота</h2>
     <div class="product-grid" id="products"></div>
   </div>
 
   <!-- Корзина -->
   <div id="cart" class="section">
-    <h2 style="color:#ff3333; margin-bottom:20px;">Твоя корзина</h2>
+    <h2 style="color:#ff3333; margin-bottom:25px;">Твоя корзина</h2>
     <div id="cart-items"></div>
-    <h3 style="margin:30px 0 15px; text-align:center;">Итого: <span id="total">0</span>$</h3>
-    <button onclick="checkout()" style="width:100%; padding:16px; background:#c00; border:none; color:white; border-radius:12px; font-size:1.15em;">
+    <h3 style="margin:35px 0 20px; text-align:center;">Итого: <span id="total">0</span>$</h3>
+    <button onclick="checkout()" style="width:100%; padding:18px; background:#c00; border:none; color:white; border-radius:12px; font-size:1.2em;">
       Оформить заказ
     </button>
   </div>
@@ -195,9 +235,9 @@
       setTimeout(() => {
         btn.textContent = original;
         btn.classList.remove('added');
-      }, 1500);
+      }, 1600);
 
-      Telegram.WebApp.showToast(`✅ Добавлено: ${product.name}`);
+      Telegram.WebApp.showToast(`✅ Добавлено в корзину: ${product.name}`);
     }
 
     function updateCart() {
@@ -206,13 +246,14 @@
       container.innerHTML = '';
       let total = 0;
 
-      cart.forEach((item, i) => {
+      cart.forEach(item => {
         total += item.price;
         const div = document.createElement('div');
         div.className = 'cart-item';
         div.innerHTML = `
-          <span>${item.name} — ${item.price}$</span>
-          <button onclick="removeFromCart(${i})" style="color:#ff5555;background:none;border:none;font-size:22px;">✕</button>
+          <img src="${item.img}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;">
+          <span style="flex:1;margin-left:12px;">${item.name} — ${item.price}$</span>
+          <button onclick="removeFromCart(${cart.indexOf(item)})" style="color:#ff5555;background:none;border:none;font-size:24px;">✕</button>
         `;
         container.appendChild(div);
       });
@@ -220,8 +261,8 @@
       document.getElementById('total').textContent = total;
     }
 
-    function removeFromCart(i) {
-      cart.splice(i, 1);
+    function removeFromCart(index) {
+      cart.splice(index, 1);
       updateCart();
     }
 
@@ -230,23 +271,6 @@
         Telegram.WebApp.showAlert("Корзина пустая");
         return;
       }
-
-      const orderList = cart.map(item => `• ${item.name} — ${item.price}$`).join('\n');
-
-      // Отправка заказа тебе в бот
-      fetch(`https://api.telegram.org/bot8472467963:AAGbG_oLzzwXmN_zMWOVEvsrUx4jsY1Hb-8/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: 5882542766,
-          text: `🛍 *Новый заказ с сайта!*\n\n` +
-                `👤 Покупатель: ${Telegram.WebApp.initDataUnsafe.user.first_name || 'Пользователь'}\n` +
-                `🆔 ID: ${Telegram.WebApp.initDataUnsafe.user.id}\n\n` +
-                `📦 Товары:\n${orderList}\n\n` +
-                `💰 Итого: ${document.getElementById('total').textContent}$`,
-          parse_mode: "Markdown"
-        })
-      });
 
       Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения.");
 
