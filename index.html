@@ -6,26 +6,105 @@
   <title>DEAD Archive SHOP</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body {margin:0;background:#0a0a0a;color:#ddd;font-family:system-ui,sans-serif;}
-    header {background:#111;padding:25px;text-align:center;border-bottom:5px solid #c00;}
-    h1 {color:#c00;margin:0;font-size:2.4em;}
-    nav {display:flex;flex-wrap:wrap;gap:10px;padding:15px;background:#1a1a1a;justify-content:center;}
-    nav button {padding:14px 20px;background:#222;border:2px solid #444;color:#ddd;border-radius:10px;cursor:pointer;}
-    nav button.active {background:#c00;border-color:#c00;color:white;}
-    .section {display:none;padding:20px;min-height:70vh;}
-    .section.active {display:block;}
-    .product-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:15px;}
-    .product {background:#1a1a1a;border-radius:12px;overflow:hidden;}
-    .product img {width:100%;height:210px;object-fit:cover;}
-    .price {color:#c00;font-size:1.4em;font-weight:bold;}
-    button.buy {width:100%;padding:14px;background:#c00;border:none;color:white;border-radius:8px;margin-top:10px;}
+    :root {
+      --red: #c00;
+      --dark: #0a0a0a;
+      --gray: #1a1a1a;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--dark);
+      color: #ddd;
+      font-family: system-ui, sans-serif;
+    }
+    header {
+      background: linear-gradient(#1a1a1a, #0a0a0a);
+      padding: 25px;
+      text-align: center;
+      border-bottom: 5px solid var(--red);
+    }
+    h1 {
+      color: var(--red);
+      font-size: 2.5em;
+      letter-spacing: 3px;
+    }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 15px;
+      background: #111;
+      justify-content: center;
+    }
+    nav button {
+      padding: 14px 20px;
+      background: #1f1f1f;
+      border: 2px solid #333;
+      color: #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    nav button.active, nav button:hover {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+    }
+    .section { display: none; padding: 20px; min-height: 75vh; }
+    .section.active { display: block; }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+    }
+    .product {
+      background: var(--gray);
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #333;
+    }
+    .product img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 14px;
+      text-align: center;
+    }
+    .price {
+      color: var(--red);
+      font-size: 1.45em;
+      font-weight: bold;
+    }
+    button.buy {
+      width: 100%;
+      padding: 14px;
+      background: var(--red);
+      border: none;
+      color: white;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .cart-item {
+      background: #1a1a1a;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+    }
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #555;
+    }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>DEAD Archive</h1>
-    <p>реплика • Архивная шмотка</p>
+    <h1>DEAD ARCHIVE</h1>
+    <p>реплика • культовая шмотка</p>
   </header>
 
   <nav>
@@ -34,26 +113,31 @@
     <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
   </nav>
 
+  <!-- Главная -->
   <div id="home" class="section active">
-    <h2 style="text-align:center;color:#c00;margin:60px 0 30px;">ДОБРО ПОЖАЛОВАТЬ В КУЛЬТ</h2>
-    <p style="text-align:center;font-size:1.1em;">Реплики топового Archive шмота</p>
+    <h2 style="text-align:center; color:#c00; margin:50px 0 25px;">ДОБРО ПОЖАЛОВАТЬ В КУЛЬТ</h2>
+    <p style="text-align:center; font-size:1.15em;">Только топовые реплики Archive шмота</p>
   </div>
 
+  <!-- Магазин -->
   <div id="shop" class="section">
-    <h2 style="color:#c00;margin-bottom:25px;">Каталог шмота</h2>
+    <h2 style="color:#c00; margin-bottom:25px;">Каталог шмота</h2>
     <div class="product-grid" id="products"></div>
   </div>
 
+  <!-- Корзина -->
   <div id="cart" class="section">
     <h2 style="color:#c00;">Твоя корзина</h2>
     <div id="cart-items"></div>
-    <h3 style="margin:25px 0 10px;">Итого: <span id="total">0</span>$</h3>
-    <button onclick="checkout()" style="width:100%;padding:16px;background:#c00;border:none;color:white;border-radius:10px;font-size:1.1em;">
+    <h3 style="margin:25px 0 15px;">Итого: <span id="total">0</span>$</h3>
+    <button onclick="checkout()" style="width:100%; padding:16px; background:#c00; border:none; color:white; border-radius:10px; font-size:1.1em;">
       Оформить заказ
     </button>
   </div>
 
-  <footer>© 2026 Dead Archive Shop</footer>
+  <footer>
+    © 2026 Dead Archive Shop
+  </footer>
 
   <script>
     Telegram.WebApp.ready();
@@ -65,9 +149,7 @@
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:"https://kappa.lol/cLC3CA.jpg"},
       {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:"https://kappa.lol/IEzPpD.jpg"},
       {id:3, name:"Джинсы Acne Studios", price:80, img:"https://kappa.lol/6aKBo5.jpg"},
-      {id:4, name:"Худи Vetements Polizei", price:90, img:"https://kappa.lol/aCimHO.jpg"},
-      {id:5, name:"Шорты Acne Studios", price:60, img:"https://kappa.lol/UDQ5kU.jpg"},
-      {id:6, name:"Штаны Maison Margiela", price:65, img:"https://kappa.lol/upj6ke.jpg"}
+      {id:4, name:"Худи Vetements Polizei", price:90, img:"https://kappa.lol/aCimHO.jpg"}
     ];
 
     function renderProducts() {
@@ -124,8 +206,8 @@
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          chat_id: 5882542766,   // ← твой ID (поменяй если нужно)
-          text: `🛍 *Новый заказ!*\n\n` +
+          chat_id: 5882542766,   // ← Замени на свой реальный Telegram ID !!!
+          text: `🛍 *Новый заказ с сайта!*\n\n` +
                 `👤 Покупатель: ${Telegram.WebApp.initDataUnsafe.user.first_name}\n` +
                 `🆔 ID: ${Telegram.WebApp.initDataUnsafe.user.id}\n\n` +
                 `📦 Товары:\n${orderText}\n\n` +
@@ -134,8 +216,8 @@
         })
       });
 
-      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения.");
-      
+      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения от бота.");
+
       cart = [];
       updateCart();
     }
