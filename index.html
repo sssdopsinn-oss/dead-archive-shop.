@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+[20.04.2026 15:41] Малый 🕸️🐈‍⬛: <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DEAD Archive SHOP • Реплика Из China </title>
+  <title>DEAD Archive SHOP • Реплика Из China</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
@@ -110,7 +110,7 @@
 
   <header>
     <h1>DEAD Archive</h1>
-    <p>репликa • Архивная шмотка</p>
+    <p>реплика • Архивная шмотка</p>
   </header>
 
   <nav>
@@ -124,8 +124,8 @@
 
   <!-- Главная -->
   <div id="home" class="section active">
-    <h2 style="text-align:center; color:#c00; margin:30px 0;">ДОБРО ПОЖАЛОВАТЬ В Dead Archive Shop</h2>
-    <p style="text-align:center; font-size:1.1em;">Реплики топового Archive/Opium шмота по нормальным ценам.<br>То, что ты видел в канале — теперь на сайте.</p>
+    <h2 style="text-align:center; color:#c00; margin:30px 0;">ДОБРО ПОЖАЛОВАТЬ В DEAD ARCHIVE SHOP</h2>
+    <p style="text-align:center; font-size:1.1em;">Реплики топового Archive / Opium шмота.<br>То, что ты видел в канале — теперь на сайте.</p>
   </div>
 
   <!-- Магазин -->
@@ -145,25 +145,25 @@
   <!-- Профиль -->
   <div id="profile" class="section">
     <h2>Профиль</h2>
-    <p>Пока просто заглушка. Позже добавим историю заказов и т.д.</p>
+    <p>Пока просто заглушка.</p>
     <p>Telegram ID: <span id="tg-id">—</span></p>
   </div>
 
   <!-- О нас -->
   <div id="about" class="section">
     <h2>О нас</h2>
-[20.04.2026 14:37] <p>Dead Archive Shop —  Это магазин реплики Лучшего Качества и альтернативной одежды в тёмном стиле.<br>Качество выше цены. </p>
+[20.04.2026 15:41] Малый 🕸️🐈‍⬛: <p>Dead Archive Shop — магазин реплик лучшего качества и альтернативной одежды в тёмном стиле.<br>Качество выше цены.</p>
   </div>
 
   <!-- Поддержка -->
   <div id="support" class="section">
     <h2>Поддержка</h2>
     <p>Пиши в наш ТГ-канал или Менеджеру @sssdopsinn</p>
-    <p>Ответим быстро </p>
+    <p>Ответим быстро.</p>
   </div>
 
   <footer>
-    © 2026 Dead Archive Shop • 
+    © 2026 Dead Archive Shop
   </footer>
 
   <script>
@@ -173,11 +173,11 @@
     let cart = [];
 
     const products = [
-      {id:1, name:"Футболка Mowalola Double Sweat", price:40$, img:"https://kappa.lol/cLC3CA"},
-      {id:2, name:"Зип-Худи Grailz Project G/R", price:75$, img:"https://kappa.lol/IEzPpD"},
-      {id:3, name:"Джинсы Acne Studios", price:80$, img:"https://kappa.lol/6aKBo5"},
-      {id:4, name:"Худи Vetements Polizei", price:90$, img:"https://kappa.lol/aCimHO"},
-      // Добавляй сюда свои реальные товары
+      {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:"https://kappa.lol/cLC3CA.jpg"},
+      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:"https://kappa.lol/IEzPpD.jpg"},
+      {id:3, name:"Джинсы Acne Studios", price:80, img:"https://kappa.lol/6aKBo5.jpg"},
+      {id:4, name:"Худи Vetements Polizei", price:90, img:"https://kappa.lol/aCimHO.jpg"},
+      // Добавляй новые товары сюда
     ];
 
     function renderProducts() {
@@ -190,7 +190,7 @@
           <img src="${p.img}" alt="${p.name}">
           <div class="product-info">
             <h3>${p.name}</h3>
-            <p class="price">${p.price} ₽</p>
+            <p class="price">${p.price}$</p>
             <button class="buy" onclick="addToCart(${p.id})">В корзину</button>
           </div>
         `;
@@ -200,9 +200,11 @@
 
     function addToCart(id) {
       const product = products.find(p => p.id === id);
-      cart.push(product);
-      updateCart();
-      Telegram.WebApp.showToast(`Добавлено: ${product.name}`);
+      if (product) {
+        cart.push(product);
+        updateCart();
+        Telegram.WebApp.showToast(`Добавлено: ${product.name}`);
+      }
     }
 
     function updateCart() {
@@ -218,7 +220,7 @@
         div.className = 'cart-item';
         div.innerHTML = `
           <span>${item.name}</span>
-          <span>${item.price} ₽ <button onclick="removeFromCart(${index})" style="color:red;background:none;border:none;">✕</button></span>
+          <span>${item.price}$ <button onclick="removeFromCart(${index})" style="color:red;background:none;border:none;">✕</button></span>
         `;
         container.appendChild(div);
       });
@@ -233,25 +235,28 @@
 
     function checkout() {
       if (cart.length === 0) return;
-      Telegram.WebApp.showAlert(`Заказ на ${document.getElementById('total').textContent} ₽ принят!\n\nСкоро свяжемся с тобой в ТГ.`);
+      Telegram.WebApp.showAlert(`Заказ на ${document.getElementById('total').textContent}$ принят!\n\nСкоро свяжемся с тобой в ТГ.`);
       cart = [];
       updateCart();
     }
 
     function showSection(section) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.getElementById(section).classList.add('active');
+      const activeSection = document.getElementById(section);
+      if (activeSection) activeSection.classList.add('active');
       
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-      // можно добавить активный класс, но для простоты пока так
+      const activeButton = Array.from(document.querySelectorAll('nav button')).find(btn => 
+        btn.getAttribute('onclick').includes(`'${section}'`)
+      );
+      if (activeButton) activeButton.classList.add('active');
     }
 
     // Инициализация
     renderProducts();
     showSection('home');
 
-    // Показываем Telegram ID (для теста)
-    document.getElementById('tg-id').textContent = Telegram.WebApp.initDataUnsafe.user ? Telegram.WebApp.initDataUnsafe.user.id : 'Не в Telegram';
+    document.getElementById('tg-id').textContent = Telegram.WebApp.initDataUnsafe?.user?.id || 'Не в Telegram';
   </script>
 </body>
 </html>
