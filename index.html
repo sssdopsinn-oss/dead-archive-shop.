@@ -26,7 +26,7 @@
     header {
       background: rgba(17, 17, 17, 0.95);
       backdrop-filter: blur(10px);
-      padding: 20px;
+      padding: 22px;
       text-align: center;
       border-bottom: 4px solid var(--red);
     }
@@ -42,7 +42,7 @@
       justify-content: center;
     }
     nav button {
-      padding: 12px 20px;
+      padding: 13px 20px;
       background: rgba(34, 34, 34, 0.9);
       border: 2px solid #444;
       color: #ddd;
@@ -56,44 +56,7 @@
       color: white;
     }
 
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 15px;
-      background: rgba(26, 26, 26, 0.9);
-      justify-content: center;
-    }
-    .tabs button {
-      padding: 10px 18px;
-      background: #222;
-      border: 2px solid #444;
-      color: #ddd;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    .tabs button.active {
-      background: var(--red);
-      border-color: var(--red);
-      color: white;
-    }
-
-    .search-bar {
-      padding: 15px;
-      text-align: center;
-    }
-    .search-bar input {
-      width: 90%;
-      max-width: 400px;
-      padding: 14px;
-      background: #222;
-      border: 2px solid #444;
-      color: #ddd;
-      border-radius: 10px;
-      font-size: 1.05em;
-    }
-
-    .section { display: none; padding: 20px; }
+    .section { display: none; padding: 20px; min-height: 75vh; }
     .section.active { display: block; }
 
     .product-grid {
@@ -126,6 +89,11 @@
       color: white;
       border-radius: 10px;
       margin-top: 10px;
+      transition: all 0.3s;
+    }
+    button.buy.added {
+      background: #00c853;
+      transform: scale(1.05);
     }
 
     .cart-item {
@@ -138,11 +106,7 @@
       border-radius: 12px;
     }
 
-    footer {
-      text-align: center;
-      padding: 30px;
-      color: #666;
-    }
+    footer { text-align: center; padding: 30px; color: #666; }
   </style>
 </head>
 <body>
@@ -158,31 +122,16 @@
     <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
   </nav>
 
-  <!-- Главная -->
   <div id="home" class="section active">
     <h2 style="text-align:center; color:#ff3333; margin:80px 0 30px; font-size:2.4em;">ДОБРО ПОЖАЛОВАТЬ В КУЛЬТ</h2>
     <p style="text-align:center; font-size:1.25em;">Только топовые реплики Archive и нефор шмота</p>
   </div>
 
-  <!-- Магазин с поиском и категориями -->
   <div id="shop" class="section">
-    <h2 style="color:#ff3333; margin-bottom:15px;">Магазин</h2>
-
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Поиск по названию..." onkeyup="filterProducts()">
-    </div>
-
-    <div class="tabs">
-      <button onclick="filterByCategory('all')" class="active">Все</button>
-      <button onclick="filterByCategory('hoodie')">Худи / Зипы</button>
-      <button onclick="filterByCategory('tshirt')">Футболки</button>
-      <button onclick="filterByCategory('jeans')">Джинсы</button>
-    </div>
-
+    <h2 style="color:#ff3333; margin-bottom:25px;">Каталог шмота</h2>
     <div class="product-grid" id="products"></div>
   </div>
 
-  <!-- Корзина -->
   <div id="cart" class="section">
     <h2 style="color:#ff3333; margin-bottom:20px;">Твоя корзина</h2>
     <div id="cart-items"></div>
@@ -192,28 +141,25 @@
     </button>
   </div>
 
-  <footer>
-    © 2026 Dead Archive Shop
-  </footer>
+  <footer>© 2026 Dead Archive Shop</footer>
 
   <script>
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
 
     let cart = [];
-    let currentCategory = 'all';
 
     const products = [
-      {id:1, name:"Футболка Mowalola Double Sweat", price:40, category:"tshirt", img:"https://kappa.lol/cLC3CA.jpg"},
-      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, category:"hoodie", img:"https://kappa.lol/IEzPpD.jpg"},
-      {id:3, name:"Джинсы Acne Studios", price:80, category:"jeans", img:"https://kappa.lol/6aKBo5.jpg"},
-      {id:4, name:"Худи Vetements Polizei", price:90, category:"hoodie", img:"https://kappa.lol/aCimHO.jpg"}
+      {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:"https://kappa.lol/cLC3CA.jpg"},
+      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:"https://kappa.lol/IEzPpD.jpg"},
+      {id:3, name:"Джинсы Acne Studios", price:80, img:"https://kappa.lol/6aKBo5.jpg"},
+      {id:4, name:"Худи Vetements Polizei", price:90, img:"https://kappa.lol/aCimHO.jpg"}
     ];
 
-    function renderProducts(filteredProducts) {
+    function renderProducts() {
       const container = document.getElementById('products');
       container.innerHTML = '';
-      filteredProducts.forEach(p => {
+      products.forEach(p => {
         const div = document.createElement('div');
         div.className = 'product';
         div.innerHTML = `
@@ -221,44 +167,31 @@
           <div class="product-info">
             <h3>${p.name}</h3>
             <p class="price">${p.price}$</p>
-            <button class="buy" onclick="addToCart(${p.id})">В корзину</button>
+            <button class="buy" onclick="addToCart(${p.id}, this)">В корзину</button>
           </div>
         `;
         container.appendChild(div);
       });
     }
 
-    function filterProducts() {
-      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-      let filtered = products;
-
-      if (currentCategory !== 'all') {
-        filtered = filtered.filter(p => p.category === currentCategory);
-      }
-
-      if (searchTerm) {
-        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm));
-      }
-
-      renderProducts(filtered);
-    }
-
-    function filterByCategory(category) {
-      currentCategory = category;
-      document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tabs button').forEach(btn => {
-        if (btn.getAttribute('onclick').includes(`'${category}'`)) btn.classList.add('active');
-      });
-      filterProducts();
-    }
-
-    function addToCart(id) {
+    function addToCart(id, button) {
       const product = products.find(p => p.id === id);
-      if (product) {
-        cart.push(product);
-        updateCart();
-        Telegram.WebApp.showToast(`✅ Добавлено: ${product.name}`);
-      }
+      if (!product) return;
+
+      cart.push(product);
+      updateCart();
+
+      // Красивая анимация кнопки
+      const originalText = button.textContent;
+      button.textContent = "✓ Добавлено";
+      button.classList.add('added');
+
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('added');
+      }, 1500);
+
+      Telegram.WebApp.showToast(`✅ Добавлено в корзину: ${product.name}`);
     }
 
     function updateCart() {
@@ -292,21 +225,12 @@
         return;
       }
 
-      const orderText = cart.map(item => `• ${item.name} — ${item.price}$`).join('\n');
-
-      fetch(`https://api.telegram.org/bot8472467963:AAGbG_oLzzwXmN_zMWOVEvsrUx4jsY1Hb-8/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: 5882542766,
-          text: `🛍 *Новый заказ с сайта!*\n\n` +
-                `👤 Покупатель: ${Telegram.WebApp.initDataUnsafe.user.first_name || 'Пользователь'}\n` +
-                `🆔 ID: ${Telegram.WebApp.initDataUnsafe.user.id}\n\n` +
-                `📦 Товары:\n${orderText}\n\n` +
-                `💰 Итого: ${document.getElementById('total').textContent}$`,
-          parse_mode: "Markdown"
-        })
-      });
+      Telegram.WebApp.sendData(JSON.stringify({
+        action: "new_order",
+        order: cart,
+        total: document.getElementById('total').textContent,
+        user: Telegram.WebApp.initDataUnsafe.user
+      }));
 
       Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения.");
 
@@ -324,8 +248,7 @@
       });
     }
 
-    // Инициализация
-    renderProducts(products);
+    renderProducts();
     showSection('home');
   </script>
 </body>
