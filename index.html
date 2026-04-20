@@ -6,21 +6,110 @@
   <title>DEAD Archive SHOP</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body {margin:0; background:#0a0a0a; color:#ddd; font-family:system-ui,sans-serif;}
-    header {background:#111; padding:20px; text-align:center; border-bottom:5px solid #c00;}
-    h1 {color:#c00; margin:0; font-size:2.4em;}
-    nav {display:flex; flex-wrap:wrap; gap:10px; padding:15px; background:#1a1a1a; justify-content:center;}
-    nav button {padding:14px 20px; background:#222; border:2px solid #444; color:#ddd; border-radius:10px; cursor:pointer;}
-    nav button.active {background:#c00; border-color:#c00; color:white;}
-    .section {display:none; padding:20px; min-height:70vh;}
-    .section.active {display:block;}
-    .product-grid {display:grid; grid-template-columns:repeat(auto-fit, minmax(170px,1fr)); gap:15px;}
-    .product {background:#1a1a1a; border-radius:12px; overflow:hidden;}
-    .product img {width:100%; height:210px; object-fit:cover;}
-    .product-info {padding:15px; text-align:center;}
-    .price {color:#c00; font-size:1.4em; font-weight:bold;}
-    button.buy {width:100%; padding:14px; background:#c00; border:none; color:white; border-radius:8px; margin-top:10px;}
-    footer {text-align:center; padding:40px; color:#555;}
+    body {
+      margin: 0;
+      background: #0a0a0a;
+      color: #ddd;
+      font-family: system-ui, sans-serif;
+    }
+    header {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 5px solid #c00;
+    }
+    h1 { color: #c00; margin: 0; font-size: 2.4em; }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 15px;
+      background: #1a1a1a;
+      justify-content: center;
+    }
+    nav button {
+      padding: 14px 20px;
+      background: #222;
+      border: 2px solid #444;
+      color: #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    nav button.active {
+      background: #c00;
+      border-color: #c00;
+      color: white;
+    }
+    .section { display: none; padding: 20px; min-height: 70vh; }
+    .section.active { display: block; }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 15px;
+    }
+    .product {
+      background: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .product img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 12px;
+      text-align: center;
+    }
+    .price { color: #c00; font-size: 1.4em; font-weight: bold; }
+
+    /* Модальное окно просмотра товара */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #1a1a1a;
+      border-radius: 16px;
+      max-width: 90%;
+      max-height: 90%;
+      overflow: hidden;
+      text-align: center;
+    }
+    .modal img {
+      width: 100%;
+      max-height: 55vh;
+      object-fit: contain;
+    }
+    .modal-info {
+      padding: 20px;
+    }
+    .modal button {
+      width: 100%;
+      padding: 15px;
+      background: #c00;
+      border: none;
+      color: white;
+      border-radius: 10px;
+      font-size: 1.1em;
+      margin-top: 10px;
+    }
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 30px;
+      color: #fff;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -57,11 +146,25 @@
 
   <footer>© 2026 Dead Archive Shop</footer>
 
+  <!-- Модальное окно -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">×</span>
+      <img id="modal-img" src="">
+      <div class="modal-info">
+        <h2 id="modal-name"></h2>
+        <p class="price" id="modal-price"></p>
+        <button onclick="addCurrentToCart()">Добавить в корзину</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
 
     let cart = [];
+    let currentProduct = null;
 
     const products = [
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:"https://kappa.lol/cLC3CA.jpg"},
@@ -77,15 +180,38 @@
         const div = document.createElement('div');
         div.className = 'product';
         div.innerHTML = `
-          <img src="${p.img}">
+          <img src="${p.img}" onclick="showProduct(${p.id})">
           <div class="product-info">
             <h3>${p.name}</h3>
             <p class="price">${p.price}$</p>
-            <button class="buy" onclick="addToCart(${p.id})">В корзину</button>
+            <button class="buy" onclick="addToCart(${p.id}); event.stopImmediatePropagation();">В корзину</button>
           </div>
         `;
         container.appendChild(div);
       });
+    }
+
+    function showProduct(id) {
+      currentProduct = products.find(p => p.id === id);
+      if (!currentProduct) return;
+
+      document.getElementById('modal-img').src = currentProduct.img;
+      document.getElementById('modal-name').textContent = currentProduct.name;
+      document.getElementById('modal-price').textContent = currentProduct.price + '$';
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    function addCurrentToCart() {
+      if (currentProduct) {
+        cart.push(currentProduct);
+        updateCart();
+        Telegram.WebApp.showToast(`Добавлено: ${currentProduct.name}`);
+        closeModal();
+      }
     }
 
     function addToCart(id) {
@@ -102,7 +228,7 @@
       const container = document.getElementById('cart-items');
       container.innerHTML = '';
       let total = 0;
-      cart.forEach(item => {
+      cart.forEach((item, index) => {
         total += item.price;
         const div = document.createElement('div');
         div.className = 'cart-item';
@@ -112,36 +238,9 @@
       document.getElementById('total').textContent = total;
     }
 
-    async function checkout() {
+    function checkout() {
       if (cart.length === 0) return;
-
-      const botToken = "8799632323:AAFBuRpVIaEtCdqFpb_EImpdlrQayDRKOyg";
-      const chatId = "5882542766";   // ← СЮДА НУЖНО ВСТАВИТЬ ТВОЙ TELEGRAM ID
-
-      const text = `🛍 Новый заказ!\n\n` +
-        `👤 Покупатель: ${Telegram.WebApp.initDataUnsafe.user.first_name}\n` +
-        `🆔 ID: ${Telegram.WebApp.initDataUnsafe.user.id}\n\n` +
-        `📦 Товары:\n` +
-        cart.map(item => `• ${item.name} — ${item.price}$`).join('\n') +
-        `\n\n💰 Итого: ${document.getElementById('total').textContent}$`;
-
-      const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-      try {
-        await fetch(url, {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: text,
-            parse_mode: "HTML"
-          })
-        });
-        Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!");
-      } catch (e) {
-        Telegram.WebApp.showAlert("Ошибка отправки заказа");
-      }
-
+      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!");
       cart = [];
       updateCart();
     }
