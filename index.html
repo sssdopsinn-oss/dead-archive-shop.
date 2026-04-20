@@ -112,21 +112,36 @@
       document.getElementById('total').textContent = total;
     }
 
-    function checkout() {
+    async function checkout() {
       if (cart.length === 0) return;
 
-      const message = {
-        action: "new_order",
-        token: "8799632323:AAFBuRpVIaEtCdqFpb_EImpdlrQayDRKOyg",
-        order: cart,
-        total: document.getElementById('total').textContent,
-        user: Telegram.WebApp.initDataUnsafe.user
-      };
+      const botToken = "8799632323:AAFBuRpVIaEtCdqFpb_EImpdlrQayDRKOyg";
+      const chatId = "5882542766";   // ← СЮДА НУЖНО ВСТАВИТЬ ТВОЙ TELEGRAM ID
 
-      Telegram.WebApp.sendData(JSON.stringify(message));
+      const text = `🛍 Новый заказ!\n\n` +
+        `👤 Покупатель: ${Telegram.WebApp.initDataUnsafe.user.first_name}\n` +
+        `🆔 ID: ${Telegram.WebApp.initDataUnsafe.user.id}\n\n` +
+        `📦 Товары:\n` +
+        cart.map(item => `• ${item.name} — ${item.price}$`).join('\n') +
+        `\n\n💰 Итого: ${document.getElementById('total').textContent}$`;
 
-      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения в боте.");
-      
+      const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+      try {
+        await fetch(url, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: text,
+            parse_mode: "HTML"
+          })
+        });
+        Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!");
+      } catch (e) {
+        Telegram.WebApp.showAlert("Ошибка отправки заказа");
+      }
+
       cart = [];
       updateCart();
     }
