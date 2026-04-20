@@ -11,9 +11,12 @@
       background: #0a0a0a;
       color: #ddd;
       font-family: system-ui, sans-serif;
+      background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1617791160505-6f00504e3519?ixlib=rb-4.0.3&auto=format&fit=crop&q=80');
+      background-size: cover;
+      background-attachment: fixed;
     }
     header {
-      background: #111;
+      background: rgba(17,17,17,0.95);
       padding: 25px;
       text-align: center;
       border-bottom: 5px solid #c00;
@@ -21,14 +24,15 @@
     h1 {
       color: #c00;
       margin: 0;
-      font-size: 2.4em;
+      font-size: 2.5em;
+      letter-spacing: 3px;
     }
     nav {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       padding: 15px;
-      background: #1a1a1a;
+      background: rgba(26,26,26,0.95);
       justify-content: center;
     }
     nav button {
@@ -38,7 +42,7 @@
       color: #ddd;
       border-radius: 10px;
       cursor: pointer;
-      font-size: 1.05em;
+      font-weight: bold;
     }
     nav button.active {
       background: #c00;
@@ -48,7 +52,7 @@
     .section {
       display: none;
       padding: 20px;
-      min-height: 70vh;
+      min-height: 75vh;
     }
     .section.active {
       display: block;
@@ -62,6 +66,7 @@
       background: #1a1a1a;
       border-radius: 12px;
       overflow: hidden;
+      border: 1px solid #333;
     }
     .product img {
       width: 100%;
@@ -85,19 +90,20 @@
       color: white;
       border-radius: 8px;
       margin-top: 10px;
+      font-weight: bold;
     }
     footer {
       text-align: center;
       padding: 40px 20px;
-      color: #555;
+      color: #666;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>DEAD Archive</h1>
-    <p>реплика • Архивная шмотка</p>
+    <h1>DEAD ARCHIVE</h1>
+    <p>реплика • культовая шмотка</p>
   </header>
 
   <nav>
@@ -108,13 +114,13 @@
 
   <!-- Главная -->
   <div id="home" class="section active">
-    <h2 style="text-align:center; color:#c00; margin:60px 0 30px;">ДОБРО ПОЖАЛОВАТЬ</h2>
-    <p style="text-align:center; font-size:1.1em;">Реплики Archive шмота</p>
+    <h2 style="text-align:center; color:#c00; margin:60px 0 30px;">ДОБРО ПОЖАЛОВАТЬ В КУЛЬТ</h2>
+    <p style="text-align:center; font-size:1.2em;">Только топовые реплики Archive и Opium стиля</p>
   </div>
 
   <!-- Магазин -->
   <div id="shop" class="section">
-    <h2 style="color:#c00; margin-bottom:25px;">Каталог шмота</h2>
+    <h2 style="color:#c00; margin-bottom:25px;">Каталог</h2>
     <div class="product-grid" id="products"></div>
   </div>
 
@@ -122,14 +128,14 @@
   <div id="cart" class="section">
     <h2 style="color:#c00;">Твоя корзина</h2>
     <div id="cart-items"></div>
-    <h3 style="margin:25px 0 10px;">Итого: <span id="total">0</span>$</h3>
+    <h3 style="margin:25px 0 15px;">Итого: <span id="total">0</span>$</h3>
     <button onclick="checkout()" style="width:100%; padding:16px; background:#c00; border:none; color:white; border-radius:10px; font-size:1.1em;">
       Оформить заказ
     </button>
   </div>
 
   <footer>
-    © 2026 Dead Archive Shop
+    © 2026 DEAD Archive Shop
   </footer>
 
   <script>
@@ -152,7 +158,7 @@
         const div = document.createElement('div');
         div.className = 'product';
         div.innerHTML = `
-          <img src="${p.img}">
+          <img src="${p.img}" alt="${p.name}">
           <div class="product-info">
             <h3>${p.name}</h3>
             <p class="price">${p.price}$</p>
@@ -200,7 +206,7 @@
         user: Telegram.WebApp.initDataUnsafe.user
       }));
 
-      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения от бота.");
+      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения от @Dead_archive_bot");
 
       cart = [];
       updateCart();
@@ -216,6 +222,7 @@
       });
     }
 
+    // Запуск
     renderProducts();
     showSection('home');
   </script>
