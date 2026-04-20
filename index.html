@@ -157,13 +157,11 @@
     <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
   </nav>
 
-  <!-- Главная -->
   <div id="home" class="section active">
     <h2 style="text-align:center; color:#ff3333; margin:80px 0 30px; font-size:2.4em;">ДОБРО ПОЖАЛОВАТЬ В КУЛЬТ</h2>
     <p style="text-align:center; font-size:1.25em;">Только топовые реплики Archive и нефор шмота</p>
   </div>
 
-  <!-- Магазин -->
   <div id="shop" class="section">
     <h2 style="color:#ff3333; margin-bottom:15px;">Магазин</h2>
     <div class="search-bar">
@@ -178,7 +176,6 @@
     <div class="product-grid" id="products"></div>
   </div>
 
-  <!-- Корзина -->
   <div id="cart" class="section">
     <h2 style="color:#ff3333; margin-bottom:20px;">Твоя корзина</h2>
     <div id="cart-items"></div>
@@ -200,7 +197,6 @@
     let currentCategory = 'all';
     let products = [];
 
-    // Загружаем товары из админ-панели
     function loadProducts() {
       const saved = localStorage.getItem('deadarchive_products');
       if (saved) {
@@ -219,10 +215,10 @@
       filterProducts();
     }
 
-    function renderProducts(filtered) {
+    function renderProducts() {
       const container = document.getElementById('products');
       container.innerHTML = '';
-      filtered.forEach(p => {
+      products.forEach(p => {
         const div = document.createElement('div');
         div.className = 'product';
         div.innerHTML = `
