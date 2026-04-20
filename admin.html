@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - DEAD Archive</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #ddd;
+      font-family: system-ui, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 { color: #c00; text-align: center; margin-bottom: 30px; }
+    input, button {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      background: #1a1a1a;
+      border: 1px solid #444;
+      color: #ddd;
+      border-radius: 8px;
+      font-size: 1.05em;
+    }
+    button {
+      background: #c00;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #ff3333; }
+    .product-item {
+      background: #1a1a1a;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .delete-btn {
+      background: #c00;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 Админ-панель DEAD Archive</h1>
+
+    <h2>Добавить новый товар</h2>
+    <input type="text" id="name" placeholder="Название товара">
+    <input type="number" id="price" placeholder="Цена в долларах">
+    <input type="text" id="category" placeholder="Категория (hoodie, tshirt, jeans)">
+    <input type="text" id="img" placeholder="Ссылка на фото (с kappa.lol)">
+    <button onclick="addProduct()">Добавить товар</button>
+
+    <h2 style="margin-top:40px;">Список товаров</h2>
+    <div id="productList"></div>
+  </div>
+
+  <script>
+    let products = JSON.parse(localStorage.getItem('deadarchive_products')) || [];
+
+    function saveProducts() {
+      localStorage.setItem('deadarchive_products', JSON.stringify(products));
+      renderList();
+    }
+
+    function addProduct() {
+      const name = document.getElementById('name').value.trim();
+      const price = parseFloat(document.getElementById('price').value);
+      const category = document.getElementById('category').value.trim();
+      const img = document.getElementById('img').value.trim();
+
+      if (!name || !price || !category || !img) {
+        alert("Заполни все поля!");
+        return;
+      }
+
+      products.push({
+        id: Date.now(),
+        name: name,
+        price: price,
+        category: category,
+        img: img
+      });
+
+      saveProducts();
+
+      // Очищаем поля
+      document.getElementById('name').value = '';
+      document.getElementById('price').value = '';
+      document.getElementById('category').value = '';
+      document.getElementById('img').value = '';
+
+      alert("Товар успешно добавлен!");
+    }
+
+    function renderList() {
+      const list = document.getElementById('productList');
+      list.innerHTML = '';
+
+      products.forEach((p, index) => {
+        const div = document.createElement('div');
+        div.className = 'product-item';
+        div.innerHTML = `
+          <div>
+            <strong>${p.name}</strong> — ${p.price}$<br>
+            <small>Категория: ${p.category}</small>
+          </div>
+          <button class="delete-btn" onclick="deleteProduct(${index})">Удалить</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function deleteProduct(index) {
+      if (confirm("Удалить этот товар?")) {
+        products.splice(index, 1);
+        saveProducts();
+      }
+    }
+
+    // Загружаем товары при открытии страницы
+    renderList();
+  </script>
+</body>
+</html>
