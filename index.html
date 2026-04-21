@@ -60,25 +60,17 @@
     .section { display: none; padding: 25px; min-height: 75vh; }
     .section.active { display: block; }
 
-    /* ==================== ГЛАВНАЯ — ОПИУМ ФОТКИ ==================== */
-    #home {
-      text-align: center;
-      padding-top: 40px;
-    }
-    .opium-grid {
+    /* Главная — опиум фотки */
+    #home .opium-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 18px;
       margin-top: 30px;
     }
-    .opium-grid img {
+    #home img {
       width: 100%;
       border-radius: 16px;
       box-shadow: 0 10px 30px rgba(192, 0, 0, 0.5);
-      transition: transform 0.4s ease;
-    }
-    .opium-grid img:hover {
-      transform: scale(1.04);
     }
 
     /* Магазин */
@@ -122,7 +114,7 @@
       border-color: var(--red);
     }
 
-    /* Модалка и корзина */
+    /* Модалка */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; }
     .modal-content { background: #1a1a1a; max-width: 500px; width: 90%; border-radius: 18px; overflow: hidden; }
     .modal-images { display: flex; overflow-x: auto; gap: 5px; padding: 10px; background: #111; }
@@ -134,14 +126,21 @@
       width: 100%; padding: 16px; background: var(--red); border: none; color: white; border-radius: 12px; margin-top: 10px;
       transition: all 0.3s ease;
     }
-    button.buy.added { background: #00c853; transform: scale(1.08); }
-    .checkout-btn.sending { background: #00c853; transform: scale(1.03); }
-
-    .cart-item {
-      display: flex; align-items: center; background: rgba(26,26,26,0.95); padding: 14px; margin: 12px 0; border-radius: 12px;
+    button.buy.added { 
+      background: #00c853; 
+      transform: scale(1.08); 
+      box-shadow: 0 0 25px rgba(0, 200, 83, 0.6);
     }
 
-    /* Футер */
+    .cart-item {
+      display: flex; 
+      align-items: center; 
+      background: rgba(26,26,26,0.95); 
+      padding: 14px; 
+      margin: 12px 0; 
+      border-radius: 12px;
+    }
+
     footer {
       text-align: center;
       padding: 45px 20px 35px;
@@ -171,38 +170,37 @@
     <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
   </nav>
 
-  <!-- ГЛАВНАЯ — ОПИУМ ФОТКИ -->
+  <!-- Главная -->
   <div id="home" class="section active">
     <div class="opium-grid">
       <img src="https://kappa.lol/u39sUL.jpg" alt="opium">
-      <img src="https://i.imgur.com/0z3z3z3.jpg" alt="opium vibe"> <!-- замени на свои опиумные фотки -->
-      <img src="https://i.imgur.com/9kL2m3P.jpg" alt="nefor aesthetic">
-      <img src="https://i.imgur.com/some-opium-pic.jpg" alt="dark fit"> <!-- добавь свои ссылки сюда -->
+      <img src="https://i.imgur.com/0z3z3z3.jpg" alt="opium vibe">
+      <img src="https://i.imgur.com/9kL2m3P.jpg" alt="nefor">
+      <!-- Добавь сюда свои любимые опиумные фотки -->
     </div>
   </div>
 
-  <!-- МАГАЗИН -->
+  <!-- Магазин -->
   <div id="shop" class="section">
     <h2 style="color:#ff3333; margin-bottom:30px;">Каталог шмота</h2>
     <div class="product-grid" id="products"></div>
     <div class="pagination" id="pagination"></div>
   </div>
 
-  <!-- О НАС -->
+  <!-- О нас -->
   <div id="about" class="section">
     <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">О нас</h2>
     <p style="font-size:1.25em; line-height:1.7; max-width:700px; margin:0 auto; text-align:center;">
       DEAD Archive — это не просто магазин реплик.<br>
-      Это культ. Это стиль. Это образ жизни для тех, кто устал от серой массы.<br><br>
-      Мы привозим только топовые архивные вещи из Китая, чтобы ты мог выглядеть так, как будто ты уже в 2027 году.
+      Это культ. Это стиль. Это образ жизни для тех, кто устал от серой массы.
     </p>
   </div>
 
-  <!-- ПОДДЕРЖКА -->
+  <!-- Поддержка -->
   <div id="support" class="section">
     <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">Поддержка</h2>
     <p style="font-size:1.3em; text-align:center; line-height:1.8;">
-      Есть вопросы по заказу? Не пришло сообщение? Хочешь предложить товар?<br><br>
+      Есть вопросы по заказу? Не пришло сообщение?<br>
       Пиши **прямо мне** — отвечу максимально быстро.
     </p>
     <div style="text-align:center; margin-top:50px;">
@@ -213,9 +211,12 @@
     </div>
   </div>
 
-  <!-- КОРЗИНА -->
+  <!-- Корзина -->
   <div id="cart" class="section">
     <h2 style="color:#ff3333; margin-bottom:25px;">Твоя корзина</h2>
+    <button onclick="clearCart()" style="margin-bottom:15px; padding:10px 20px; background:#333; border:none; color:#ddd; border-radius:8px;">
+      Очистить корзину
+    </button>
     <div id="cart-items"></div>
     <h3 style="margin:35px 0 20px; text-align:center;">Итого: <span id="total">0</span>$</h3>
     <button id="checkoutBtn" onclick="checkout()" class="checkout-btn">
@@ -247,9 +248,20 @@
     Telegram.WebApp.expand();
 
     let cart = [];
-    let currentProduct = null;
-    let currentPage = 1;
-    const itemsPerPage = 6;
+
+    // Загрузка корзины из localStorage
+    function loadCart() {
+      const savedCart = localStorage.getItem('deadarchive_cart');
+      if (savedCart) {
+        cart = JSON.parse(savedCart);
+      }
+      updateCart();
+    }
+
+    // Сохранение корзины
+    function saveCart() {
+      localStorage.setItem('deadarchive_cart', JSON.stringify(cart));
+    }
 
     const products = [
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:["https://kappa.lol/cLC3CA.jpg"], desc:"Классическая футболка с двойным принтом"},
@@ -266,27 +278,10 @@
       {id:12, name:"Штаны Number (N)ine", price:85, img:["https://kappa.lol/random5.jpg"], desc:"Винтажные штаны"}
     ];
 
-    function getPaginatedProducts(page) {
-      const start = (page - 1) * itemsPerPage;
-      return products.slice(start, start + itemsPerPage);
-    }
-
-    function renderPagination(totalPages) {
-      const container = document.getElementById('pagination');
-      container.innerHTML = '';
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement('button');
-        btn.textContent = i;
-        btn.classList.toggle('active', i === currentPage);
-        btn.onclick = () => { currentPage = i; renderShop(); };
-        container.appendChild(btn);
-      }
-    }
-
     function renderShop() {
       const container = document.getElementById('products');
       container.innerHTML = '';
-      const currentProducts = getPaginatedProducts(currentPage);
+      const currentProducts = products.slice(0, 12); // пока без пагинации для простоты
 
       currentProducts.forEach(p => {
         const div = document.createElement('div');
@@ -301,7 +296,6 @@
         `;
         container.appendChild(div);
       });
-      renderPagination(Math.ceil(products.length / itemsPerPage));
     }
 
     function openModal(product) {
@@ -326,14 +320,18 @@
       document.getElementById('modal').style.display = 'none';
     }
 
+    let currentProduct = null;
+
     function addCurrentToCart() {
       if (currentProduct) {
         const btn = document.querySelector('#modal .buy');
         const original = btn.textContent;
+
         btn.textContent = "✓ Добавлено";
         btn.classList.add('added');
 
         cart.push(currentProduct);
+        saveCart();
         updateCart();
 
         Telegram.WebApp.showToast(`✅ Добавлено: ${currentProduct.name}`);
@@ -351,6 +349,7 @@
       const container = document.getElementById('cart-items');
       container.innerHTML = '';
       let total = 0;
+
       cart.forEach((item, i) => {
         total += item.price;
         const div = document.createElement('div');
@@ -367,11 +366,24 @@
 
     function removeFromCart(i) {
       cart.splice(i, 1);
+      saveCart();
       updateCart();
     }
 
+    function clearCart() {
+      if (confirm("Очистить всю корзину?")) {
+        cart = [];
+        saveCart();
+        updateCart();
+      }
+    }
+
     function checkout() {
-      if (cart.length === 0) return;
+      if (cart.length === 0) {
+        Telegram.WebApp.showAlert("Корзина пустая");
+        return;
+      }
+
       const btn = document.getElementById('checkoutBtn');
       const original = btn.textContent;
       btn.textContent = "Отправляем...";
@@ -396,6 +408,7 @@
       Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения.");
 
       cart = [];
+      saveCart();
       updateCart();
 
       setTimeout(() => {
@@ -417,6 +430,7 @@
     }
 
     // Инициализация
+    loadCart();
     renderShop();
     showSection('home');
   </script>
