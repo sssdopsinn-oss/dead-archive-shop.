@@ -93,7 +93,16 @@
     }
     .product img { width: 100%; height: 235px; object-fit: cover; }
     .product-info { padding: 16px; text-align: center; }
-    .price { color: #ff3333; font-size: 1.5em; font-weight: bold; }
+    .price { 
+      color: #ff3333; 
+      font-size: 1.4em; 
+      font-weight: bold; 
+      margin: 8px 0;
+    }
+    .price-grn {
+      color: #ffaa33;
+      font-size: 1.1em;
+    }
 
     /* Пагинация */
     .pagination {
@@ -116,21 +125,21 @@
     }
 
     /* Модальное окно — несколько фото */
-    .modal { 
-      display: none; 
-      position: fixed; 
-      inset: 0; 
-      background: rgba(0,0,0,0.92); 
-      z-index: 1000; 
-      align-items: center; 
-      justify-content: center; 
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
     }
-    .modal-content { 
-      background: #1a1a1a; 
-      max-width: 520px; 
-      width: 95%; 
-      border-radius: 18px; 
-      overflow: hidden; 
+    .modal-content {
+      background: #1a1a1a;
+      max-width: 520px;
+      width: 95%;
+      border-radius: 18px;
+      overflow: hidden;
     }
     .modal-images {
       display: flex;
@@ -142,8 +151,8 @@
     }
     .modal-images img {
       width: 100%;
-      max-width: 480px;
-      height: 320px;
+      max-width: 460px;     /* ← сделал чуть меньше */
+      height: 280px;        /* ← сделал меньше, как ты просил */
       object-fit: cover;
       border-radius: 12px;
       flex-shrink: 0;
@@ -176,6 +185,10 @@
       padding: 14px; 
       margin: 12px 0; 
       border-radius: 12px;
+    }
+    .cart-price {
+      color: #ffaa33;
+      font-size: 0.95em;
     }
 
     footer {
@@ -223,7 +236,7 @@
     <div class="pagination" id="pagination"></div>
   </div>
 
-  <!-- О нас и Поддержка (оставил как было) -->
+  <!-- О нас -->
   <div id="about" class="section">
     <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">О нас</h2>
     <p style="font-size:1.25em; line-height:1.7; max-width:700px; margin:0 auto; text-align:center;">
@@ -232,6 +245,7 @@
     </p>
   </div>
 
+  <!-- Поддержка -->
   <div id="support" class="section">
     <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">Поддержка</h2>
     <p style="font-size:1.3em; text-align:center; line-height:1.8;">
@@ -253,13 +267,15 @@
       Очистить корзину
     </button>
     <div id="cart-items"></div>
-    <h3 style="margin:35px 0 20px; text-align:center;">Итого: <span id="total">0</span>$</h3>
+    <h3 style="margin:35px 0 20px; text-align:center;">
+      Итого: <span id="total-usd">0</span>$ (<span id="total-uah">0</span> ₴)
+    </h3>
     <button id="checkoutBtn" onclick="checkout()" class="checkout-btn">
       Оформить заказ
     </button>
   </div>
 
-  <!-- Модальное окно с несколькими фото -->
+  <!-- Модальное окно -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">×</span>
@@ -267,6 +283,7 @@
       <div class="modal-info">
         <h2 id="modalName"></h2>
         <p class="price" id="modalPrice"></p>
+        <p id="modalPriceUah" class="price-grn"></p>
         <p id="modalDesc"></p>
         <button onclick="addCurrentToCart()" class="buy">Добавить в корзину</button>
       </div>
@@ -282,39 +299,41 @@
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
 
+    const USD_TO_UAH = 41;   // ← курс доллара к гривне (можно менять)
+
     let cart = [];
     let currentProduct = null;
     let currentPage = 1;
     const itemsPerPage = 6;
 
     const products = [
-      {id:1, name:"Футболка Mowalola Double Sweat", price:50, 
+      {id:1, name:"Футболка Mowalola Double Sweat", price:50,
        img:["https://kappa.lol/cLC3CA.jpg", "https://kappa.lol/3sjJSI.jpg", "https://kappa.lol/fJbkmo.jpg", "https://kappa.lol/Nu52GS.jpg"],
        desc:"Футболка Mowalola с двойным принтом (4 фото)"},
 
-      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, 
-       img:["https://kappa.lol/IEzPpD.jpg", "https://kappa.lol/VGOyOY.jpg", "https://kappa.lol/kApzXs.jpg"], 
+      {id:2, name:"Зип-Худи Grailz Project G/R", price:75,
+       img:["https://kappa.lol/IEzPpD.jpg", "https://kappa.lol/VGOyOY.jpg", "https://kappa.lol/kApzXs.jpg"],
        desc:"Тёплый зип-худи в стиле Grailz (3 фото)"},
 
-      {id:3, name:"Джинсы Acne Studios", price:80, 
-       img:["https://kappa.lol/6aKBo5.jpg"], 
+      {id:3, name:"Джинсы Acne Studios", price:80,
+       img:["https://kappa.lol/6aKBo5.jpg"],
        desc:"Широкие чёрные джинсы"},
 
-      {id:4, name:"Худи Vetements Polizei", price:90, 
+      {id:4, name:"Худи Vetements Polizei", price:90,
        img:["https://kappa.lol/9vC7xw.jpg", "https://kappa.lol/j00CDM.jpg", "https://kappa.lol/A8IFEN.jpg", "https://kappa.lol/5w4C3w.jpg"],
        desc:"Культовая худи с полицейским принтом (4 фото)"},
 
-      {id:5, name:"Штаны Maison Margiela", price:90, 
+      {id:5, name:"Штаны Maison Margiela", price:90,
        img:["https://kappa.lol/upj6ke.jpg", "https://kappa.lol/LJY5sq.jpg", "https://kappa.lol/6Shbdt.jpg", "https://kappa.lol/EzY4yI.jpg", "https://kappa.lol/sCYSO2.jpg"],
        desc:"Стильные штаны Maison Margiela (5 фото)"},
 
-      {id:6, name:"Шорты Acne Studios", price:90, 
-       img:["https://kappa.lol/UDQ5kU.jpg", "https://kappa.lol/JMHCaM.jpg", "https://kappa.lol/HttpQq.jpg", "https://kappa.lol/5nBYQa.jpg", "https://kappa.lol/c88lz1.jpg", "https://kappa.lol/GSP5IQ.jpg"], 
-       desc:"Комфортные шорты Acne Studios Stockholm 1996 (6 фото)"},
+      {id:6, name:"Шорты Acne Studios", price:90,
+       img:["https://kappa.lol/UDQ5kU.jpg", "https://kappa.lol/JMHCaM.jpg", "https://kappa.lol/HttpQq.jpg", "https://kappa.lol/5nBYQa.jpg", "https://kappa.lol/c88lz1.jpg", "https://kappa.lol/GSP5IQ.jpg"],
+       desc:"Комфортные шорты Acne Studios (6 фото)"},
 
-      {id:7, name:"Худи Acne Studios Stockholm 1996", price:90, 
-       img:["https://kappa.lol/WMQfJK.jpg", "https://kappa.lol/pGk89F.jpg", "https://kappa.lol/V9BdIW.jpg"], 
-       desc:"Худи в стиле 1996 года (3 фото)"},
+      {id:7, name:"Худи Acne Studios Stockholm 1996", price:90,
+       img:["https://kappa.lol/WMQfJK.jpg", "https://kappa.lol/pGk89F.jpg", "https://kappa.lol/V9BdIW.jpg"],
+       desc:"Худи в стиле 1996 года (3 фото)"}
     ];
 
     function loadCart() {
@@ -342,7 +361,7 @@
           <img src="${p.img[0]}">
           <div class="product-info">
             <h3>${p.name}</h3>
-            <p class="price">${p.price}$</p>
+            <p class="price">${p.price}$ <span class="price-grn">(${(p.price * USD_TO_UAH)} ₴)</span></p>
           </div>
         `;
         container.appendChild(div);
@@ -374,13 +393,12 @@
       modal.style.display = 'flex';
 
       document.getElementById('modalName').textContent = product.name;
-      document.getElementById('modalPrice').textContent = product.price + '$';
+      document.getElementById('modalPrice').innerHTML = `${product.price}$ <span class="price-grn">(${(product.price * USD_TO_UAH)} ₴)</span>`;
       document.getElementById('modalDesc').textContent = product.desc || 'Описание отсутствует';
 
       const imagesContainer = document.getElementById('modalImages');
       imagesContainer.innerHTML = '';
 
-      // Добавляем все фото товара
       product.img.forEach(src => {
         const img = document.createElement('img');
         img.src = src;
@@ -426,12 +444,17 @@
         div.className = 'cart-item';
         div.innerHTML = `
           <img src="${item.img[0]}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;">
-          <span style="flex:1;margin-left:15px;">${item.name} — ${item.price}$</span>
+          <span style="flex:1;margin-left:15px;">${item.name}</span>
+          <span style="margin-right:15px;">
+            ${item.price}$ <span class="cart-price">(${(item.price * USD_TO_UAH)} ₴)</span>
+          </span>
           <button onclick="removeFromCart(${i})" style="color:#ff5555;background:none;border:none;font-size:24px;">✕</button>
         `;
         container.appendChild(div);
       });
-      document.getElementById('total').textContent = total;
+
+      document.getElementById('total-usd').textContent = total;
+      document.getElementById('total-uah').textContent = Math.round(total * USD_TO_UAH);
     }
 
     function removeFromCart(i) {
@@ -459,7 +482,10 @@
       btn.textContent = "Отправляем...";
       btn.classList.add('sending');
 
-      const orderList = cart.map(item => `• ${item.name} — ${item.price}$`).join('\n');
+      const totalUsd = cart.reduce((sum, item) => sum + item.price, 0);
+      const totalUah = Math.round(totalUsd * USD_TO_UAH);
+
+      const orderList = cart.map(item => `• ${item.name} — ${item.price}$ (${Math.round(item.price * USD_TO_UAH)} ₴)`).join('\n');
 
       fetch(`https://api.telegram.org/bot8472467963:AAGbG_oLzzwXmN_zMWOVEvsrUx4jsY1Hb-8/sendMessage`, {
         method: 'POST',
@@ -470,12 +496,12 @@
                 `👤 Покупатель: ${Telegram.WebApp.initDataUnsafe.user.first_name || 'Пользователь'}\n` +
                 `🆔 ID: ${Telegram.WebApp.initDataUnsafe.user.id}\n\n` +
                 `📦 Товары:\n${orderList}\n\n` +
-                `💰 Итого: ${document.getElementById('total').textContent}$`,
+                `💰 Итого: ${totalUsd}$ (${totalUah} ₴)`,
           parse_mode: "Markdown"
         })
       });
 
-      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения.");
+      Telegram.WebApp.showAlert(`✅ Заказ отправлен менеджеру!\n\nИтого: ${totalUsd}$ (${totalUah} ₴)\nОжидай сообщения.`);
 
       cart = [];
       saveCart();
