@@ -95,13 +95,11 @@
     .product-info { padding: 16px; text-align: center; }
     .price { color: #ff3333; font-size: 1.5em; font-weight: bold; }
 
-    /* Пагинация */
     .pagination {
       display: flex;
       justify-content: center;
       gap: 12px;
       margin: 40px 0 20px;
-      flex-wrap: wrap;
     }
     .pagination button {
       padding: 12px 20px;
@@ -110,12 +108,10 @@
       color: #ddd;
       border-radius: 10px;
       cursor: pointer;
-      min-width: 45px;
     }
     .pagination button.active, .pagination button:hover {
       background: var(--red);
       border-color: var(--red);
-      color: white;
     }
 
     /* Модалка */
@@ -183,7 +179,7 @@
     </div>
   </div>
 
-  <!-- Магазин с пагинацией -->
+  <!-- Магазин -->
   <div id="shop" class="section">
     <h2 style="color:#ff3333; margin-bottom:30px;">Каталог шмота</h2>
     <div class="product-grid" id="products"></div>
@@ -199,7 +195,7 @@
     </p>
   </div>
 
-  <!-- Поддержка -->
+  <!-- Поддержка (исправлено) -->
   <div id="support" class="section">
     <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">Поддержка</h2>
     <p style="font-size:1.3em; text-align:center; line-height:1.8;">
@@ -207,7 +203,7 @@
       Пиши **прямо мне** — отвечу максимально быстро.
     </p>
     <div style="text-align:center; margin-top:50px;">
-      <a href="https://t.me/ТВОЙ_ЮЗЕРНЕЙМ" target="_blank" 
+      <a href="https://t.me/sssdopsinn" target="_blank" 
          style="color:#ff6666; font-size:1.5em; text-decoration:none; font-weight:bold;">
         → Написать в поддержку ←
       </a>
@@ -253,7 +249,7 @@
     let cart = [];
     let currentProduct = null;
     let currentPage = 1;
-    const itemsPerPage = 6;   // ← по 6 товаров на странице
+    const itemsPerPage = 6;
 
     const products = [
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:["https://kappa.lol/cLC3CA.jpg"], desc:"Классическая футболка с двойным принтом"},
@@ -285,8 +281,7 @@
       container.innerHTML = '';
 
       const start = (currentPage - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      const currentProducts = products.slice(start, end);
+      const currentProducts = products.slice(start, start + itemsPerPage);
 
       currentProducts.forEach(p => {
         const div = document.createElement('div');
