@@ -34,14 +34,14 @@
     nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       padding: 18px;
       background: rgba(26, 26, 26, 0.95);
       backdrop-filter: blur(10px);
       justify-content: center;
     }
     nav button {
-      padding: 14px 24px;
+      padding: 13px 22px;
       background: rgba(34, 34, 34, 0.9);
       border: 2px solid #555;
       color: #ddd;
@@ -60,41 +60,47 @@
     .section { display: none; padding: 25px; min-height: 75vh; }
     .section.active { display: block; }
 
-    /* ==================== ГЛАВНАЯ ==================== */
+    /* ==================== ГЛАВНАЯ — ПИЗДАТАЯ АНИМАЦИЯ ==================== */
     #home {
       text-align: center;
-      padding-top: 60px;
+      padding-top: 90px;
     }
     .main-title {
-      font-size: 3.2em;
-      font-weight: bold;
-      color: #ff3333;
+      font-size: 3.8em;
+      font-weight: 900;
+      color: #ff2222;
       text-shadow: 
-        0 0 20px #ff3333,
-        0 0 40px #ff0000,
-        0 0 60px #c00;
-      animation: glow 2s ease-in-out infinite alternate;
-      margin-bottom: 20px;
-      letter-spacing: 4px;
+        0 0 30px #ff3333,
+        0 0 60px #ff0000,
+        0 0 100px #c00;
+      animation: neonPulse 2.8s ease-in-out infinite alternate;
+      letter-spacing: 8px;
+      margin-bottom: 25px;
     }
     .sub-text {
-      font-size: 1.45em;
-      color: #ff6666;
-      margin: 20px 0 50px;
-      text-shadow: 0 0 15px rgba(255, 100, 100, 0.7);
-      animation: pulse 3s ease-in-out infinite;
+      font-size: 1.6em;
+      color: #ff7777;
+      text-shadow: 0 0 20px #ff4444;
+      animation: subPulse 4s ease-in-out infinite;
+      margin: 0 20px 60px;
     }
 
-    @keyframes glow {
-      from { text-shadow: 0 0 20px #ff3333, 0 0 40px #ff0000; }
-      to { text-shadow: 0 0 30px #ff3333, 0 0 60px #ff0000, 0 0 80px #c00; }
+    @keyframes neonPulse {
+      from { 
+        text-shadow: 0 0 20px #ff3333, 0 0 50px #ff0000; 
+        transform: scale(1);
+      }
+      to { 
+        text-shadow: 0 0 50px #ff3333, 0 0 90px #ff0000, 0 0 130px #c00; 
+        transform: scale(1.03);
+      }
     }
-    @keyframes pulse {
+    @keyframes subPulse {
       0%, 100% { opacity: 0.85; }
       50% { opacity: 1; }
     }
 
-    /* Пагинация и товары */
+    /* Магазин + пагинация */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -112,15 +118,8 @@
       transform: translateY(-10px);
       box-shadow: 0 15px 35px rgba(192, 0, 0, 0.6);
     }
-    .product img {
-      width: 100%;
-      height: 235px;
-      object-fit: cover;
-    }
-    .product-info {
-      padding: 16px;
-      text-align: center;
-    }
+    .product img { width: 100%; height: 235px; object-fit: cover; }
+    .product-info { padding: 16px; text-align: center; }
     .price { color: #ff3333; font-size: 1.5em; font-weight: bold; }
 
     .pagination {
@@ -142,8 +141,8 @@
       border-color: var(--red);
     }
 
-    /* Модальное окно и корзина */
-    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; }
+    /* Модалка и корзина */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; }
     .modal-content { background: #1a1a1a; max-width: 500px; width: 90%; border-radius: 18px; overflow: hidden; }
     .modal-images { display: flex; overflow-x: auto; gap: 5px; padding: 10px; background: #111; }
     .modal-images img { width: 100%; height: 300px; object-fit: cover; border-radius: 12px; flex-shrink: 0; }
@@ -161,23 +160,17 @@
       display: flex; align-items: center; background: rgba(26,26,26,0.95); padding: 14px; margin: 12px 0; border-radius: 12px;
     }
 
-    /* Футер с любовью к Даше */
+    /* Футер */
     footer {
       text-align: center;
-      padding: 40px 20px 30px;
+      padding: 45px 20px 35px;
       color: #666;
       font-size: 0.95em;
     }
     .love-dash {
       color: #ff3366;
-      font-size: 1.05em;
-      margin-top: 12px;
-      animation: heartbeat 1.8s ease-in-out infinite;
-      display: inline-block;
-    }
-    @keyframes heartbeat {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.15); }
+      margin-top: 8px;
+      display: block;
     }
   </style>
 </head>
@@ -191,27 +184,54 @@
   <nav>
     <button onclick="showSection('home')" class="active">Главная</button>
     <button onclick="showSection('shop')">Магазин</button>
+    <button onclick="showSection('about')">О нас</button>
+    <button onclick="showSection('support')">Поддержка</button>
     <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
   </nav>
 
-  <!-- ==================== ГЛАВНАЯ ==================== -->
+  <!-- ГЛАВНАЯ (супер анимация) -->
   <div id="home" class="section active">
     <h2 class="main-title">DEAD CULT</h2>
-    <p class="sub-text">Здесь рождается стиль.<br>Здесь умирает скука.</p>
-    
-    <div style="margin: 60px 0; font-size: 1.3em; color: #ff5555; text-shadow: 0 0 20px #c00;">
-      Только для тех, кто понимает.
-    </div>
+    <p class="sub-text">
+      Здесь рождается стиль.<br>
+      Здесь умирает скука.
+    </p>
   </div>
 
-  <!-- ==================== МАГАЗИН ==================== -->
+  <!-- МАГАЗИН -->
   <div id="shop" class="section">
     <h2 style="color:#ff3333; margin-bottom:30px;">Каталог шмота</h2>
     <div class="product-grid" id="products"></div>
     <div class="pagination" id="pagination"></div>
   </div>
 
-  <!-- ==================== КОРЗИНА ==================== -->
+  <!-- О НАС -->
+  <div id="about" class="section">
+    <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">О нас</h2>
+    <p style="font-size:1.25em; line-height:1.7; max-width:700px; margin:0 auto; text-align:center;">
+      DEAD Archive — это не просто магазин реплик.<br>
+      Это культ. Это стиль. Это образ жизни для тех, кто устал от серой массы.<br><br>
+      Мы привозим только топовые архивные вещи из Китая, чтобы ты мог выглядеть так, как будто ты уже в 2027 году.
+    </p>
+  </div>
+
+  <!-- ПОДДЕРЖКА -->
+  <div id="support" class="section">
+    <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">Поддержка</h2>
+    <p style="font-size:1.25em; text-align:center; line-height:1.8;">
+      Есть вопросы по заказу?<br>
+      Не пришло сообщение?<br>
+      Хочешь предложить товар?<br><br>
+      Пиши нам в Telegram — ответим максимально быстро.
+    </p>
+    <div style="text-align:center; margin-top:40px;">
+      <a href="https://t.me/Dead_archive_bot" target="_blank" style="color:#ff6666; font-size:1.3em; text-decoration:none;">
+        → Написать в поддержку ←
+      </a>
+    </div>
+  </div>
+
+  <!-- КОРЗИНА -->
   <div id="cart" class="section">
     <h2 style="color:#ff3333; margin-bottom:25px;">Твоя корзина</h2>
     <div id="cart-items"></div>
@@ -249,7 +269,7 @@
     let currentPage = 1;
     const itemsPerPage = 6;
 
-    const products = [
+    const products = [ /* твой список товаров без изменений */ 
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:["https://kappa.lol/cLC3CA.jpg"], desc:"Классическая футболка с двойным принтом"},
       {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:["https://kappa.lol/IEzPpD.jpg"], desc:"Тёплый зип-худи в стиле Grailz"},
       {id:3, name:"Джинсы Acne Studios", price:80, img:["https://kappa.lol/6aKBo5.jpg"], desc:"Широкие чёрные джинсы"},
@@ -299,9 +319,7 @@
         `;
         container.appendChild(div);
       });
-
-      const totalPages = Math.ceil(products.length / itemsPerPage);
-      renderPagination(totalPages);
+      renderPagination(Math.ceil(products.length / itemsPerPage));
     }
 
     function openModal(product) {
@@ -351,7 +369,6 @@
       const container = document.getElementById('cart-items');
       container.innerHTML = '';
       let total = 0;
-
       cart.forEach((item, i) => {
         total += item.price;
         const div = document.createElement('div');
