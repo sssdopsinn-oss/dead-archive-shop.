@@ -60,7 +60,7 @@
     .section { display: none; padding: 25px; min-height: 75vh; }
     .section.active { display: block; }
 
-    /* Главная — опиум фотки */
+    /* Главная */
     #home .opium-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -95,11 +95,13 @@
     .product-info { padding: 16px; text-align: center; }
     .price { color: #ff3333; font-size: 1.5em; font-weight: bold; }
 
+    /* Пагинация */
     .pagination {
       display: flex;
       justify-content: center;
       gap: 12px;
       margin: 40px 0 20px;
+      flex-wrap: wrap;
     }
     .pagination button {
       padding: 12px 20px;
@@ -108,10 +110,12 @@
       color: #ddd;
       border-radius: 10px;
       cursor: pointer;
+      min-width: 45px;
     }
     .pagination button.active, .pagination button:hover {
       background: var(--red);
       border-color: var(--red);
+      color: white;
     }
 
     /* Модалка */
@@ -176,11 +180,10 @@
       <img src="https://kappa.lol/u39sUL.jpg" alt="opium">
       <img src="https://i.imgur.com/0z3z3z3.jpg" alt="opium vibe">
       <img src="https://i.imgur.com/9kL2m3P.jpg" alt="nefor">
-      <!-- Добавь сюда свои любимые опиумные фотки -->
     </div>
   </div>
 
-  <!-- Магазин -->
+  <!-- Магазин с пагинацией -->
   <div id="shop" class="section">
     <h2 style="color:#ff3333; margin-bottom:30px;">Каталог шмота</h2>
     <div class="product-grid" id="products"></div>
@@ -248,20 +251,9 @@
     Telegram.WebApp.expand();
 
     let cart = [];
-
-    // Загрузка корзины из localStorage
-    function loadCart() {
-      const savedCart = localStorage.getItem('deadarchive_cart');
-      if (savedCart) {
-        cart = JSON.parse(savedCart);
-      }
-      updateCart();
-    }
-
-    // Сохранение корзины
-    function saveCart() {
-      localStorage.setItem('deadarchive_cart', JSON.stringify(cart));
-    }
+    let currentProduct = null;
+    let currentPage = 1;
+    const itemsPerPage = 6;   // ← по 6 товаров на странице
 
     const products = [
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:["https://kappa.lol/cLC3CA.jpg"], desc:"Классическая футболка с двойным принтом"},
@@ -278,10 +270,23 @@
       {id:12, name:"Штаны Number (N)ine", price:85, img:["https://kappa.lol/random5.jpg"], desc:"Винтажные штаны"}
     ];
 
+    function loadCart() {
+      const saved = localStorage.getItem('deadarchive_cart');
+      if (saved) cart = JSON.parse(saved);
+      updateCart();
+    }
+
+    function saveCart() {
+      localStorage.setItem('deadarchive_cart', JSON.stringify(cart));
+    }
+
     function renderShop() {
       const container = document.getElementById('products');
       container.innerHTML = '';
-      const currentProducts = products.slice(0, 12); // пока без пагинации для простоты
+
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const currentProducts = products.slice(start, end);
 
       currentProducts.forEach(p => {
         const div = document.createElement('div');
@@ -296,6 +301,25 @@
         `;
         container.appendChild(div);
       });
+
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(products.length / itemsPerPage);
+      const container = document.getElementById('pagination');
+      container.innerHTML = '';
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.classList.toggle('active', i === currentPage);
+        btn.onclick = () => {
+          currentPage = i;
+          renderShop();
+        };
+        container.appendChild(btn);
+      }
     }
 
     function openModal(product) {
@@ -320,28 +344,26 @@
       document.getElementById('modal').style.display = 'none';
     }
 
-    let currentProduct = null;
-
     function addCurrentToCart() {
-      if (currentProduct) {
-        const btn = document.querySelector('#modal .buy');
-        const original = btn.textContent;
+      if (!currentProduct) return;
 
-        btn.textContent = "✓ Добавлено";
-        btn.classList.add('added');
+      const btn = document.querySelector('#modal .buy');
+      const original = btn.textContent;
 
-        cart.push(currentProduct);
-        saveCart();
-        updateCart();
+      btn.textContent = "✓ Добавлено";
+      btn.classList.add('added');
 
-        Telegram.WebApp.showToast(`✅ Добавлено: ${currentProduct.name}`);
+      cart.push(currentProduct);
+      saveCart();
+      updateCart();
 
-        setTimeout(() => {
-          btn.textContent = original;
-          btn.classList.remove('added');
-          closeModal();
-        }, 1400);
-      }
+      Telegram.WebApp.showToast(`✅ Добавлено: ${currentProduct.name}`);
+
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('added');
+        closeModal();
+      }, 1400);
     }
 
     function updateCart() {
