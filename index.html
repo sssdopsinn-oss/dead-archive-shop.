@@ -22,7 +22,6 @@
       background: rgba(10, 10, 10, 0.8);
       z-index: -1;
     }
-
     header {
       background: rgba(17, 17, 17, 0.95);
       backdrop-filter: blur(10px);
@@ -31,7 +30,6 @@
       border-bottom: 5px solid var(--red);
     }
     h1 { color: #ff3333; font-size: 2.6em; letter-spacing: 3px; }
-
     nav {
       display: flex;
       flex-wrap: wrap;
@@ -60,10 +58,8 @@
       border-color: var(--red);
       color: white;
     }
-
     .section { display: none; padding: 25px; min-height: 75vh; }
     .section.active { display: block; }
-
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -101,13 +97,21 @@
       z-index: 1000;
       align-items: center;
       justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
+    .modal.show { opacity: 1; }
     .modal-content {
       background: #1a1a1a;
       max-width: 500px;
       width: 90%;
       border-radius: 18px;
       overflow: hidden;
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+    }
+    .modal.show .modal-content {
+      transform: scale(1);
     }
     .modal-images {
       display: flex;
@@ -134,15 +138,58 @@
       color: #fff;
       cursor: pointer;
     }
+
+    /* Анимации кнопок */
+    button.buy {
+      width: 100%;
+      padding: 16px;
+      background: var(--red);
+      border: none;
+      color: white;
+      border-radius: 12px;
+      font-size: 1.1em;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    button.buy.added {
+      background: #00c853;
+      transform: scale(1.08);
+      box-shadow: 0 0 20px rgba(0, 200, 83, 0.6);
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 18px;
+      background: #c00;
+      border: none;
+      color: white;
+      border-radius: 12px;
+      font-size: 1.2em;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+    .checkout-btn.sending {
+      background: #00c853;
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(0, 200, 83, 0.7);
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      background: rgba(26, 26, 26, 0.95);
+      padding: 14px;
+      margin: 12px 0;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
   </style>
 </head>
 <body>
-
   <header>
     <h1>DEAD ARCHIVE</h1>
     <p>реплика • культовая шмотка</p>
   </header>
-
   <nav>
     <button onclick="showSection('home')" class="active">Главная</button>
     <button onclick="showSection('shop')">Магазин</button>
@@ -166,7 +213,7 @@
     <h2 style="color:#ff3333; margin-bottom:25px;">Твоя корзина</h2>
     <div id="cart-items"></div>
     <h3 style="margin:35px 0 20px; text-align:center;">Итого: <span id="total">0</span>$</h3>
-    <button onclick="checkout()" style="width:100%; padding:18px; background:#c00; border:none; color:white; border-radius:12px; font-size:1.2em;">
+    <button id="checkoutBtn" onclick="checkout()" class="checkout-btn">
       Оформить заказ
     </button>
   </div>
@@ -180,7 +227,7 @@
         <h2 id="modalName"></h2>
         <p class="price" id="modalPrice"></p>
         <p id="modalDesc">Описание товара будет здесь. Можно добавить любой текст.</p>
-        <button onclick="addCurrentToCart()" style="width:100%;padding:16px;background:#c00;border:none;color:white;border-radius:12px;margin-top:15px;">Добавить в корзину</button>
+        <button onclick="addCurrentToCart()" class="buy">Добавить в корзину</button>
       </div>
     </div>
   </div>
@@ -195,7 +242,6 @@
 
     let cart = [];
     let currentProduct = null;
-
     const products = [
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:["https://kappa.lol/cLC3CA.jpg"], desc:"Классическая футболка с двойным принтом"},
       {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:["https://kappa.lol/IEzPpD.jpg"], desc:"Тёплый зип-худи в стиле Grailz"},
@@ -226,7 +272,10 @@
 
     function openModal(product) {
       currentProduct = product;
-      document.getElementById('modal').style.display = 'flex';
+      const modal = document.getElementById('modal');
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('show'), 10);
+
       document.getElementById('modalName').textContent = product.name;
       document.getElementById('modalPrice').textContent = product.price + '$';
       document.getElementById('modalDesc').textContent = product.desc || 'Описание отсутствует';
@@ -241,15 +290,31 @@
     }
 
     function closeModal() {
-      document.getElementById('modal').style.display = 'none';
+      const modal = document.getElementById('modal');
+      modal.classList.remove('show');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
     }
 
     function addCurrentToCart() {
       if (currentProduct) {
+        const btn = document.querySelector('#modal .buy');
+        const originalText = btn.textContent;
+
+        btn.textContent = "✓ Добавлено";
+        btn.classList.add('added');
+
         cart.push(currentProduct);
         updateCart();
+
         Telegram.WebApp.showToast(`✅ Добавлено: ${currentProduct.name}`);
-        closeModal();
+
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('added');
+          closeModal();
+        }, 1200);
       }
     }
 
@@ -270,7 +335,6 @@
         `;
         container.appendChild(div);
       });
-
       document.getElementById('total').textContent = total;
     }
 
@@ -284,6 +348,12 @@
         Telegram.WebApp.showAlert("Корзина пустая");
         return;
       }
+
+      const btn = document.getElementById('checkoutBtn');
+      const originalText = btn.textContent;
+
+      btn.textContent = "Отправляем заказ...";
+      btn.classList.add('sending');
 
       const orderList = cart.map(item => `• ${item.name} — ${item.price}$`).join('\n');
 
@@ -299,24 +369,29 @@
                 `💰 Итого: ${document.getElementById('total').textContent}$`,
           parse_mode: "Markdown"
         })
+      }).then(() => {
+        Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения.");
+        cart = [];
+        updateCart();
+      }).finally(() => {
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('sending');
+        }, 1800);
       });
-
-      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения.");
-
-      cart = [];
-      updateCart();
     }
 
     function showSection(section) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(section).classList.add('active');
-      
+     
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('nav button').forEach(btn => {
         if (btn.getAttribute('onclick').includes(`'${section}'`)) btn.classList.add('active');
       });
     }
 
+    // Инициализация
     renderProducts();
     showSection('home');
   </script>
