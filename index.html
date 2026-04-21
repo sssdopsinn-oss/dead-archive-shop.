@@ -19,7 +19,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: rgba(10, 10, 10, 0.8);
+      background: rgba(10, 10, 10, 0.82);
       z-index: -1;
     }
     header {
@@ -30,6 +30,7 @@
       border-bottom: 5px solid var(--red);
     }
     h1 { color: #ff3333; font-size: 2.6em; letter-spacing: 3px; }
+
     nav {
       display: flex;
       flex-wrap: wrap;
@@ -49,17 +50,40 @@
       font-weight: bold;
       transition: all 0.3s ease;
     }
-    nav button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(192, 0, 0, 0.5);
-    }
+    nav button:hover { transform: translateY(-3px); }
     nav button.active {
       background: var(--red);
       border-color: var(--red);
       color: white;
     }
+
     .section { display: none; padding: 25px; min-height: 75vh; }
     .section.active { display: block; }
+
+    /* Главная - opium атмосфера */
+    #home {
+      text-align: center;
+      padding-top: 40px;
+    }
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .home-grid img {
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(192, 0, 0, 0.4);
+    }
+    .opium-text {
+      font-size: 1.35em;
+      margin: 30px 0;
+      color: #ff6666;
+      text-shadow: 0 0 15px rgba(255, 50, 50, 0.6);
+    }
+
+    /* Магазин */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -88,127 +112,80 @@
     }
     .price { color: #ff3333; font-size: 1.5em; font-weight: bold; }
 
-    /* Модальное окно товара */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.9);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .modal.show { opacity: 1; }
-    .modal-content {
-      background: #1a1a1a;
-      max-width: 500px;
-      width: 90%;
-      border-radius: 18px;
-      overflow: hidden;
-      transform: scale(0.8);
-      transition: transform 0.3s ease;
-    }
-    .modal.show .modal-content {
-      transform: scale(1);
-    }
-    .modal-images {
+    /* Пагинация */
+    .pagination {
       display: flex;
-      overflow-x: auto;
-      gap: 5px;
-      padding: 10px;
-      background: #111;
+      justify-content: center;
+      gap: 12px;
+      margin: 40px 0 20px;
     }
-    .modal-images img {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      border-radius: 12px;
-      flex-shrink: 0;
-    }
-    .modal-info {
-      padding: 20px;
-    }
-    .close {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 30px;
-      color: #fff;
+    .pagination button {
+      padding: 12px 20px;
+      background: rgba(34,34,34,0.9);
+      border: 2px solid #555;
+      color: #ddd;
+      border-radius: 10px;
       cursor: pointer;
     }
-
-    /* Анимации кнопок */
-    button.buy {
-      width: 100%;
-      padding: 16px;
+    .pagination button.active, .pagination button:hover {
       background: var(--red);
-      border: none;
-      color: white;
-      border-radius: 12px;
-      font-size: 1.1em;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    button.buy.added {
-      background: #00c853;
-      transform: scale(1.08);
-      box-shadow: 0 0 20px rgba(0, 200, 83, 0.6);
+      border-color: var(--red);
     }
 
-    .checkout-btn {
-      width: 100%;
-      padding: 18px;
-      background: #c00;
-      border: none;
-      color: white;
-      border-radius: 12px;
-      font-size: 1.2em;
-      transition: all 0.4s ease;
-      cursor: pointer;
+    /* Остальные стили (модалка, корзина и т.д.) */
+    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-content { background: #1a1a1a; max-width: 500px; width: 90%; border-radius: 18px; overflow: hidden; }
+    .modal-images { display: flex; overflow-x: auto; gap: 5px; padding: 10px; background: #111; }
+    .modal-images img { width: 100%; height: 300px; object-fit: cover; border-radius: 12px; flex-shrink: 0; }
+    .modal-info { padding: 20px; }
+    .close { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #fff; cursor: pointer; }
+
+    button.buy, .checkout-btn {
+      width: 100%; padding: 16px; background: var(--red); border: none; color: white; border-radius: 12px; margin-top: 10px;
+      transition: all 0.3s ease;
     }
-    .checkout-btn.sending {
-      background: #00c853;
-      transform: scale(1.03);
-      box-shadow: 0 0 25px rgba(0, 200, 83, 0.7);
-    }
+    button.buy.added { background: #00c853; transform: scale(1.08); }
+    .checkout-btn.sending { background: #00c853; transform: scale(1.03); }
 
     .cart-item {
-      display: flex;
-      align-items: center;
-      background: rgba(26, 26, 26, 0.95);
-      padding: 14px;
-      margin: 12px 0;
-      border-radius: 12px;
-      transition: all 0.3s ease;
+      display: flex; align-items: center; background: rgba(26,26,26,0.95); padding: 14px; margin: 12px 0; border-radius: 12px;
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>DEAD ARCHIVE</h1>
     <p>реплика • культовая шмотка</p>
   </header>
+
   <nav>
     <button onclick="showSection('home')" class="active">Главная</button>
     <button onclick="showSection('shop')">Магазин</button>
     <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
   </nav>
 
-  <!-- Главная -->
+  <!-- ==================== ГЛАВНАЯ ==================== -->
   <div id="home" class="section active">
-    <h2 style="text-align:center; color:#ff3333; margin:90px 0 40px; font-size:2.6em;">ДОБРО ПОЖАЛОВАТЬ В КУЛЬТ</h2>
-    <p style="text-align:center; font-size:1.3em;">Только топовые реплики Archive и нефор шмота</p>
+    <h2 style="color:#ff3333; font-size:2.8em; margin-bottom:20px;">DEAD CULT</h2>
+    <p class="opium-text">Мы не просто продаём шмот.<br>Мы продаём стиль, в котором ты живёшь.</p>
+
+    <div class="home-grid">
+      <img src="https://kappa.lol/u39sUL.jpg" alt="background">
+      <img src="https://i.imgur.com/0z3z3z3.jpg" alt="opium vibe"> <!-- можно заменить на свои гифки/фото -->
+      <img src="https://i.imgur.com/9kL2m3P.jpg" alt="nefor aesthetic">
+    </div>
   </div>
 
-  <!-- Магазин -->
+  <!-- ==================== МАГАЗИН ==================== -->
   <div id="shop" class="section">
     <h2 style="color:#ff3333; margin-bottom:30px;">Каталог шмота</h2>
     <div class="product-grid" id="products"></div>
+
+    <div class="pagination" id="pagination"></div>
   </div>
 
-  <!-- Корзина -->
+  <!-- ==================== КОРЗИНА ==================== -->
   <div id="cart" class="section">
     <h2 style="color:#ff3333; margin-bottom:25px;">Твоя корзина</h2>
     <div id="cart-items"></div>
@@ -218,7 +195,7 @@
     </button>
   </div>
 
-  <!-- Модальное окно товара -->
+  <!-- Модальное окно -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">×</span>
@@ -226,13 +203,13 @@
       <div class="modal-info">
         <h2 id="modalName"></h2>
         <p class="price" id="modalPrice"></p>
-        <p id="modalDesc">Описание товара будет здесь. Можно добавить любой текст.</p>
+        <p id="modalDesc"></p>
         <button onclick="addCurrentToCart()" class="buy">Добавить в корзину</button>
       </div>
     </div>
   </div>
 
-  <footer>
+  <footer style="text-align:center; padding:40px; color:#666;">
     © 2026 Dead Archive Shop
   </footer>
 
@@ -242,20 +219,53 @@
 
     let cart = [];
     let currentProduct = null;
+    let currentPage = 1;
+    const itemsPerPage = 6;
+
     const products = [
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:["https://kappa.lol/cLC3CA.jpg"], desc:"Классическая футболка с двойным принтом"},
       {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:["https://kappa.lol/IEzPpD.jpg"], desc:"Тёплый зип-худи в стиле Grailz"},
-      {id:3, name:"Джинсы Acne Studios", price:80, img:["https://kappa.lol/6aKBo5.jpg"], desc:"Широкие чёрные джинсы премиум качества"},
+      {id:3, name:"Джинсы Acne Studios", price:80, img:["https://kappa.lol/6aKBo5.jpg"], desc:"Широкие чёрные джинсы"},
       {id:4, name:"Худи Vetements Polizei", price:90, img:["https://kappa.lol/aCimHO.jpg"], desc:"Культовая худи с полицейским принтом"},
       {id:5, name:"Штаны Maison Margiela", price:90, img:["https://kappa.lol/upj6ke.jpg"], desc:"Стильные штаны Maison Margiela"},
-      {id:6, name:"Шорты Acne Studios", price:90, img:["https://kappa.lol/UDQ5kU.jpg"], desc:"Комфортные шорты Acne Studios"},
-      {id:7, name:"Худи Acne Studios Stockholm 1996", price:90, img:["https://kappa.lol/WMQfJK.jpg"], desc:"Худи в стиле 1996 года"}
+      {id:6, name:"Шорты Acne Studios", price:90, img:["https://kappa.lol/UDQ5kU.jpg"], desc:"Комфортные шорты"},
+      {id:7, name:"Худи Acne Studios Stockholm 1996", price:90, img:["https://kappa.lol/WMQfJK.jpg"], desc:"Худи в стиле 1996 года"},
+      // Рандомные товары для второй страницы (заменишь потом)
+      {id:8, name:"Bomber Rick Owens", price:110, img:["https://kappa.lol/random1.jpg"], desc:"Тяжёлый бомбер Rick Owens"},
+      {id:9, name:"Джинсы Balenciaga", price:95, img:["https://kappa.lol/random2.jpg"], desc:"Оверсайз джинсы Balenciaga"},
+      {id:10, name:"Худи Chrome Hearts", price:120, img:["https://kappa.lol/random3.jpg"], desc:"Кросс с черепами"},
+      {id:11, name:"Футболка Undercover", price:65, img:["https://kappa.lol/random4.jpg"], desc:"Undercover x fragment"},
+      {id:12, name:"Штаны Number (N)ine", price:85, img:["https://kappa.lol/random5.jpg"], desc:"Винтажные штаны"}
     ];
 
-    function renderProducts() {
+    function getPaginatedProducts(page) {
+      const start = (page - 1) * itemsPerPage;
+      return products.slice(start, start + itemsPerPage);
+    }
+
+    function renderPagination(totalPages) {
+      const container = document.getElementById('pagination');
+      container.innerHTML = '';
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.classList.toggle('active', i === currentPage);
+        btn.onclick = () => {
+          currentPage = i;
+          renderShop();
+        };
+        container.appendChild(btn);
+      }
+    }
+
+    function renderShop() {
       const container = document.getElementById('products');
       container.innerHTML = '';
-      products.forEach(p => {
+
+      const currentProducts = getPaginatedProducts(currentPage);
+
+      currentProducts.forEach(p => {
         const div = document.createElement('div');
         div.className = 'product';
         div.onclick = () => openModal(p);
@@ -268,13 +278,15 @@
         `;
         container.appendChild(div);
       });
+
+      const totalPages = Math.ceil(products.length / itemsPerPage);
+      renderPagination(totalPages);
     }
 
     function openModal(product) {
       currentProduct = product;
       const modal = document.getElementById('modal');
       modal.style.display = 'flex';
-      setTimeout(() => modal.classList.add('show'), 10);
 
       document.getElementById('modalName').textContent = product.name;
       document.getElementById('modalPrice').textContent = product.price + '$';
@@ -290,18 +302,13 @@
     }
 
     function closeModal() {
-      const modal = document.getElementById('modal');
-      modal.classList.remove('show');
-      setTimeout(() => {
-        modal.style.display = 'none';
-      }, 300);
+      document.getElementById('modal').style.display = 'none';
     }
 
     function addCurrentToCart() {
       if (currentProduct) {
         const btn = document.querySelector('#modal .buy');
-        const originalText = btn.textContent;
-
+        const original = btn.textContent;
         btn.textContent = "✓ Добавлено";
         btn.classList.add('added');
 
@@ -311,10 +318,10 @@
         Telegram.WebApp.showToast(`✅ Добавлено: ${currentProduct.name}`);
 
         setTimeout(() => {
-          btn.textContent = originalText;
+          btn.textContent = original;
           btn.classList.remove('added');
           closeModal();
-        }, 1200);
+        }, 1400);
       }
     }
 
@@ -344,15 +351,10 @@
     }
 
     function checkout() {
-      if (cart.length === 0) {
-        Telegram.WebApp.showAlert("Корзина пустая");
-        return;
-      }
-
+      if (cart.length === 0) return;
       const btn = document.getElementById('checkoutBtn');
-      const originalText = btn.textContent;
-
-      btn.textContent = "Отправляем заказ...";
+      const original = btn.textContent;
+      btn.textContent = "Отправляем...";
       btn.classList.add('sending');
 
       const orderList = cart.map(item => `• ${item.name} — ${item.price}$`).join('\n');
@@ -369,30 +371,33 @@
                 `💰 Итого: ${document.getElementById('total').textContent}$`,
           parse_mode: "Markdown"
         })
-      }).then(() => {
-        Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения.");
-        cart = [];
-        updateCart();
-      }).finally(() => {
-        setTimeout(() => {
-          btn.textContent = originalText;
-          btn.classList.remove('sending');
-        }, 1800);
       });
+
+      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!\n\nОжидай сообщения.");
+
+      cart = [];
+      updateCart();
+
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('sending');
+      }, 1800);
     }
 
     function showSection(section) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(section).classList.add('active');
-     
+
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('nav button').forEach(btn => {
         if (btn.getAttribute('onclick').includes(`'${section}'`)) btn.classList.add('active');
       });
+
+      if (section === 'shop') renderShop();
     }
 
     // Инициализация
-    renderProducts();
+    renderShop();
     showSection('home');
   </script>
 </body>
