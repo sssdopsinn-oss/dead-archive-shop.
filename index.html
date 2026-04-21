@@ -60,47 +60,28 @@
     .section { display: none; padding: 25px; min-height: 75vh; }
     .section.active { display: block; }
 
-    /* ==================== ГЛАВНАЯ — ПИЗДАТАЯ АНИМАЦИЯ ==================== */
+    /* ==================== ГЛАВНАЯ — ОПИУМ ФОТКИ ==================== */
     #home {
       text-align: center;
-      padding-top: 90px;
+      padding-top: 40px;
     }
-    .main-title {
-      font-size: 3.8em;
-      font-weight: 900;
-      color: #ff2222;
-      text-shadow: 
-        0 0 30px #ff3333,
-        0 0 60px #ff0000,
-        0 0 100px #c00;
-      animation: neonPulse 2.8s ease-in-out infinite alternate;
-      letter-spacing: 8px;
-      margin-bottom: 25px;
+    .opium-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+      margin-top: 30px;
     }
-    .sub-text {
-      font-size: 1.6em;
-      color: #ff7777;
-      text-shadow: 0 0 20px #ff4444;
-      animation: subPulse 4s ease-in-out infinite;
-      margin: 0 20px 60px;
+    .opium-grid img {
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(192, 0, 0, 0.5);
+      transition: transform 0.4s ease;
+    }
+    .opium-grid img:hover {
+      transform: scale(1.04);
     }
 
-    @keyframes neonPulse {
-      from { 
-        text-shadow: 0 0 20px #ff3333, 0 0 50px #ff0000; 
-        transform: scale(1);
-      }
-      to { 
-        text-shadow: 0 0 50px #ff3333, 0 0 90px #ff0000, 0 0 130px #c00; 
-        transform: scale(1.03);
-      }
-    }
-    @keyframes subPulse {
-      0%, 100% { opacity: 0.85; }
-      50% { opacity: 1; }
-    }
-
-    /* Магазин + пагинация */
+    /* Магазин */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -164,13 +145,14 @@
     footer {
       text-align: center;
       padding: 45px 20px 35px;
-      color: #666;
-      font-size: 0.95em;
+      color: #555;
+      font-size: 0.9em;
     }
     .love-dash {
       color: #ff3366;
       margin-top: 8px;
-      display: block;
+      font-size: 0.95em;
+      opacity: 0.7;
     }
   </style>
 </head>
@@ -189,13 +171,14 @@
     <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
   </nav>
 
-  <!-- ГЛАВНАЯ (супер анимация) -->
+  <!-- ГЛАВНАЯ — ОПИУМ ФОТКИ -->
   <div id="home" class="section active">
-    <h2 class="main-title">DEAD CULT</h2>
-    <p class="sub-text">
-      Здесь рождается стиль.<br>
-      Здесь умирает скука.
-    </p>
+    <div class="opium-grid">
+      <img src="https://kappa.lol/u39sUL.jpg" alt="opium">
+      <img src="https://i.imgur.com/0z3z3z3.jpg" alt="opium vibe"> <!-- замени на свои опиумные фотки -->
+      <img src="https://i.imgur.com/9kL2m3P.jpg" alt="nefor aesthetic">
+      <img src="https://i.imgur.com/some-opium-pic.jpg" alt="dark fit"> <!-- добавь свои ссылки сюда -->
+    </div>
   </div>
 
   <!-- МАГАЗИН -->
@@ -218,14 +201,13 @@
   <!-- ПОДДЕРЖКА -->
   <div id="support" class="section">
     <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">Поддержка</h2>
-    <p style="font-size:1.25em; text-align:center; line-height:1.8;">
-      Есть вопросы по заказу?<br>
-      Не пришло сообщение?<br>
-      Хочешь предложить товар?<br><br>
-      Пиши нам в Telegram — ответим максимально быстро.
+    <p style="font-size:1.3em; text-align:center; line-height:1.8;">
+      Есть вопросы по заказу? Не пришло сообщение? Хочешь предложить товар?<br><br>
+      Пиши **прямо мне** — отвечу максимально быстро.
     </p>
-    <div style="text-align:center; margin-top:40px;">
-      <a href="https://t.me/Dead_archive_bot" target="_blank" style="color:#ff6666; font-size:1.3em; text-decoration:none;">
+    <div style="text-align:center; margin-top:50px;">
+      <a href="https://t.me/ТВОЙ_ЮЗЕРНЕЙМ" target="_blank" 
+         style="color:#ff6666; font-size:1.5em; text-decoration:none; font-weight:bold;">
         → Написать в поддержку ←
       </a>
     </div>
@@ -269,7 +251,7 @@
     let currentPage = 1;
     const itemsPerPage = 6;
 
-    const products = [ /* твой список товаров без изменений */ 
+    const products = [
       {id:1, name:"Футболка Mowalola Double Sweat", price:40, img:["https://kappa.lol/cLC3CA.jpg"], desc:"Классическая футболка с двойным принтом"},
       {id:2, name:"Зип-Худи Grailz Project G/R", price:75, img:["https://kappa.lol/IEzPpD.jpg"], desc:"Тёплый зип-худи в стиле Grailz"},
       {id:3, name:"Джинсы Acne Studios", price:80, img:["https://kappa.lol/6aKBo5.jpg"], desc:"Широкие чёрные джинсы"},
