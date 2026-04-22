@@ -144,7 +144,7 @@
       border-color: var(--red);
     }
 
-    /* Модальное окно с несколькими фото */
+    /* Модальное окно */
     .modal {
       display: none;
       position: fixed;
@@ -279,6 +279,9 @@
   <!-- Корзина -->
   <div id="cart" class="section">
     <h2 style="color:#ff3333; margin-bottom:25px;">Твоя корзина</h2>
+    <button onclick="clearCart()" style="margin-bottom:15px; padding:10px 20px; background:#333; border:none; color:#ddd; border-radius:8px;">
+      Очистить корзину
+    </button>
     <div id="cart-items"></div>
     <h3 style="margin:35px 0 20px; text-align:center;">
       Итого: <span id="total-usd">0</span>$ (<span id="total-uah">0</span> ₴)
@@ -288,7 +291,7 @@
     </button>
   </div>
 
-  <!-- Модальное окно с несколькими фото -->
+  <!-- Модальное окно -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">×</span>
@@ -318,27 +321,53 @@
 
     const products = [
       {id:1, name:"Футболка Mowalola Double Sweat", price:50,
-       img:["https://kappa.lol/cLC3CA.jpg", "https://kappa.lol/3sjJSI.jpg", "https://kappa.lol/fJbkmo.jpg", "https://kappa.lol/Nu52GS.jpg"],
+       img:["https://kappa.lol/cLC3CA.jpg", "https://kappa.lol/3sjJSI.jpg", "https://kappa.lol/fJbkmo.jpg"],
        desc:"Футболка Mowalola с двойным принтом"},
       {id:2, name:"Зип-Худи Grailz Project G/R", price:75,
-       img:["https://kappa.lol/IEzPpD.jpg", "https://kappa.lol/VGOyOY.jpg", "https://kappa.lol/kApzXs.jpg"],
+       img:["https://kappa.lol/IEzPpD.jpg", "https://kappa.lol/VGOyOY.jpg"],
        desc:"Тёплый зип-худи в стиле Grailz"},
       {id:3, name:"Джинсы Acne Studios", price:80,
        img:["https://kappa.lol/6aKBo5.jpg"],
        desc:"Широкие чёрные джинсы"},
       {id:4, name:"Худи Vetements Polizei", price:90,
-       img:["https://kappa.lol/9vC7xw.jpg", "https://kappa.lol/j00CDM.jpg", "https://kappa.lol/A8IFEN.jpg"],
+       img:["https://kappa.lol/9vC7xw.jpg", "https://kappa.lol/j00CDM.jpg"],
        desc:"Культовая худи с полицейским принтом"},
       {id:5, name:"Штаны Maison Margiela", price:90,
-       img:["https://kappa.lol/upj6ke.jpg", "https://kappa.lol/LJY5sq.jpg", "https://kappa.lol/6Shbdt.jpg"],
+       img:["https://kappa.lol/upj6ke.jpg"],
        desc:"Стильные штаны Maison Margiela"},
       {id:6, name:"Шорты Acne Studios", price:90,
-       img:["https://kappa.lol/UDQ5kU.jpg", "https://kappa.lol/JMHCaM.jpg", "https://kappa.lol/HttpQq.jpg"],
-       desc:"Комфортные шорты Acne Studios"},
+       img:["https://kappa.lol/UDQ5kU.jpg"],
+       desc:"Комфортные шорты"},
       {id:7, name:"Худи Acne Studios Stockholm 1996", price:90,
-       img:["https://kappa.lol/WMQfJK.jpg", "https://kappa.lol/pGk89F.jpg"],
-       desc:"Худи в стиле 1996 года"}
+       img:["https://kappa.lol/WMQfJK.jpg"],
+       desc:"Худи в стиле 1996 года"},
+      // Дополнительные товары для второй страницы
+      {id:8, name:"Bomber Rick Owens", price:110,
+       img:["https://kappa.lol/random1.jpg"],
+       desc:"Тяжёлый бомбер Rick Owens"},
+      {id:9, name:"Джинсы Balenciaga", price:95,
+       img:["https://kappa.lol/random2.jpg"],
+       desc:"Оверсайз джинсы Balenciaga"},
+      {id:10, name:"Худи Chrome Hearts", price:120,
+       img:["https://kappa.lol/random3.jpg"],
+       desc:"Худи Chrome Hearts с кроссом"},
+      {id:11, name:"Футболка Undercover", price:65,
+       img:["https://kappa.lol/random4.jpg"],
+       desc:"Undercover x fragment"},
+      {id:12, name:"Штаны Number (N)ine", price:85,
+       img:["https://kappa.lol/random5.jpg"],
+       desc:"Винтажные штаны Number (N)ine"}
     ];
+
+    function loadCart() {
+      const saved = localStorage.getItem('deadarchive_cart');
+      if (saved) cart = JSON.parse(saved);
+      updateCart();
+    }
+
+    function saveCart() {
+      localStorage.setItem('deadarchive_cart', JSON.stringify(cart));
+    }
 
     function renderShop() {
       const container = document.getElementById('products');
@@ -404,6 +433,7 @@
 
     function addCurrentToCart() {
       if (!currentProduct) return;
+
       const btn = document.querySelector('#modal .buy');
       const original = btn.textContent;
 
@@ -411,6 +441,7 @@
       btn.classList.add('added');
 
       cart.push(currentProduct);
+      saveCart();
       updateCart();
 
       Telegram.WebApp.showToast(`✅ Добавлено: ${currentProduct.name}`);
@@ -424,6 +455,50 @@
 
     function updateCart() {
       document.getElementById('cart-count').textContent = cart.length;
+      const container = document.getElementById('cart-items');
+      container.innerHTML = '';
+      let total = 0;
+
+      cart.forEach((item, i) => {
+        total += item.price;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <img src="${item.img[0]}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;">
+          <span style="flex:1;margin-left:15px;">${item.name}</span>
+          <span style="margin-right:15px;">${item.price}$</span>
+          <button onclick="removeFromCart(${i})" style="color:#ff5555;background:none;border:none;font-size:24px;">✕</button>
+        `;
+        container.appendChild(div);
+      });
+
+      document.getElementById('total-usd').textContent = total;
+      document.getElementById('total-uah').textContent = Math.round(total * 41);
+    }
+
+    function removeFromCart(i) {
+      cart.splice(i, 1);
+      saveCart();
+      updateCart();
+    }
+
+    function clearCart() {
+      if (confirm("Очистить всю корзину?")) {
+        cart = [];
+        saveCart();
+        updateCart();
+      }
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        Telegram.WebApp.showAlert("Корзина пустая");
+        return;
+      }
+      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!");
+      cart = [];
+      saveCart();
+      updateCart();
     }
 
     function showSection(section) {
@@ -439,6 +514,7 @@
     }
 
     // Инициализация
+    loadCart();
     renderShop();
     showSection('home');
   </script>
