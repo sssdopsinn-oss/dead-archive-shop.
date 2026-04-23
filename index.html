@@ -6,16 +6,13 @@
   <title>DEAD Archive SHOP</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    :root {
-      --red: #e60000;
-      --dark: #0a0a0a;
-    }
+    :root { --red: #e60000; --dark: #0a0a0a; }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       background: url('https://kappa.lol/u39sUL.jpg') no-repeat center center fixed;
       background-size: cover;
       color: #e0e0e0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: system-ui, sans-serif;
       min-height: 100vh;
     }
     body::before {
@@ -40,12 +37,7 @@
       color: #ff1a1a;
       text-shadow: 0 0 45px rgba(230, 0, 0, 0.8);
     }
-    .subtitle {
-      color: #aaa;
-      font-size: 1.15em;
-      letter-spacing: 3px;
-      margin-top: 8px;
-    }
+    .subtitle { color: #aaa; font-size: 1.15em; letter-spacing: 3px; margin-top: 8px; }
 
     nav {
       display: flex;
@@ -84,11 +76,7 @@
       gap: 24px;
       margin-top: 40px;
     }
-    #home img {
-      width: 100%;
-      border-radius: 22px;
-      box-shadow: 0 25px 65px rgba(192, 0, 0, 0.55);
-    }
+    #home img { width: 100%; border-radius: 22px; box-shadow: 0 25px 65px rgba(192, 0, 0, 0.55); }
 
     /* Магазин */
     .product-grid {
@@ -106,22 +94,17 @@
     .product:hover {
       transform: translateY(-14px);
       box-shadow: 0 30px 75px rgba(192, 0, 0, 0.8);
-      border-color: var(--red);
     }
-    .product img {
-      width: 100%;
-      height: 255px;
-      object-fit: cover;
-    }
-    .product-info {
-      padding: 20px;
-      text-align: center;
-    }
+    .product img { width: 100%; height: 255px; object-fit: cover; }
+    .product-info { padding: 20px; text-align: center; }
     .price {
       color: #ff4444;
-      font-size: 1.6em;
+      font-size: 1.55em;
       font-weight: 700;
-      margin: 10px 0 6px;
+    }
+    .price-grn {
+      color: #ffaa44;
+      font-size: 1.1em;
     }
 
     /* Пагинация */
@@ -139,10 +122,7 @@
       border-radius: 12px;
       cursor: pointer;
     }
-    .pagination button.active, .pagination button:hover {
-      background: var(--red);
-      border-color: var(--red);
-    }
+    .pagination button.active, .pagination button:hover { background: var(--red); border-color: var(--red); }
 
     /* Модальное окно */
     .modal {
@@ -160,7 +140,6 @@
       width: 94%;
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 0 90px rgba(230, 0, 0, 0.6);
     }
     .modal-images {
       display: flex;
@@ -178,32 +157,13 @@
       flex-shrink: 0;
     }
     .modal-info { padding: 26px; }
-    .close {
-      position: absolute;
-      top: 22px;
-      right: 26px;
-      font-size: 40px;
-      color: #fff;
-      cursor: pointer;
-      z-index: 10;
-    }
+    .close { position: absolute; top: 22px; right: 26px; font-size: 40px; color: #fff; cursor: pointer; z-index: 10; }
 
     button.buy, .checkout-btn {
-      width: 100%;
-      padding: 18px;
-      background: var(--red);
-      border: none;
-      color: white;
-      border-radius: 14px;
-      font-size: 1.15em;
-      font-weight: 700;
-      margin-top: 15px;
-      transition: all 0.3s ease;
+      width: 100%; padding: 18px; background: var(--red); border: none; color: white; border-radius: 14px; margin-top: 15px;
+      font-weight: 700; transition: all 0.3s ease;
     }
-    button.buy.added {
-      background: #00cc66;
-      transform: scale(1.06);
-    }
+    button.buy.added { background: #00cc66; transform: scale(1.06); }
 
     .cart-item {
       display: flex;
@@ -258,7 +218,7 @@
     <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">О нас</h2>
     <p style="font-size:1.25em; line-height:1.7; max-width:720px; margin:0 auto; text-align:center;">
       DEAD Archive — это не просто магазин реплик.<br>
-      Это культ. Это стиль. Это образ жизни для тех, кто устал от серой массы.
+      Это культ. Это стиль. Это образ жизни.
     </p>
   </div>
 
@@ -269,8 +229,7 @@
       Есть вопросы по заказу? Пиши мне напрямую.
     </p>
     <div style="text-align:center; margin-top:50px;">
-      <a href="https://t.me/sssdopsinn" target="_blank" 
-         style="color:#ff6666; font-size:1.5em; text-decoration:none; font-weight:bold;">
+      <a href="https://t.me/sssdopsinn" target="_blank" style="color:#ff6666; font-size:1.5em; text-decoration:none; font-weight:bold;">
         → Написать в поддержку ←
       </a>
     </div>
@@ -314,6 +273,7 @@
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
 
+    const USD_TO_UAH = 41;
     let cart = [];
     let currentProduct = null;
     let currentPage = 1;
@@ -321,42 +281,48 @@
 
     const products = [
       {id:1, name:"Футболка Mowalola Double Sweat", price:50,
-       img:["https://kappa.lol/cLC3CA.jpg", "https://kappa.lol/3sjJSI.jpg", "https://kappa.lol/fJbkmo.jpg"],
+       img:["https://kappa.lol/cLC3CA.jpg", "https://kappa.lol/3sjJSI.jpg", "https://kappa.lol/fJbkmo.jpg", "https://kappa.lol/Nu52GS.jpg"],
        desc:"Футболка Mowalola с двойным принтом"},
+
       {id:2, name:"Зип-Худи Grailz Project G/R", price:75,
-       img:["https://kappa.lol/IEzPpD.jpg", "https://kappa.lol/VGOyOY.jpg"],
+       img:["https://kappa.lol/IEzPpD.jpg", "https://kappa.lol/VGOyOY.jpg", "https://kappa.lol/kApzXs.jpg"],
        desc:"Тёплый зип-худи в стиле Grailz"},
+
       {id:3, name:"Джинсы Acne Studios", price:80,
        img:["https://kappa.lol/6aKBo5.jpg"],
        desc:"Широкие чёрные джинсы"},
+
       {id:4, name:"Худи Vetements Polizei", price:90,
-       img:["https://kappa.lol/9vC7xw.jpg", "https://kappa.lol/j00CDM.jpg"],
+       img:["https://kappa.lol/9vC7xw.jpg", "https://kappa.lol/j00CDM.jpg", "https://kappa.lol/A8IFEN.jpg", "https://kappa.lol/5w4C3w.jpg"],
        desc:"Культовая худи с полицейским принтом"},
+
       {id:5, name:"Штаны Maison Margiela", price:90,
-       img:["https://kappa.lol/upj6ke.jpg"],
+       img:["https://kappa.lol/upj6ke.jpg", "https://kappa.lol/LJY5sq.jpg", "https://kappa.lol/6Shbdt.jpg", "https://kappa.lol/EzY4yI.jpg", "https://kappa.lol/sCYSO2.jpg"],
        desc:"Стильные штаны Maison Margiela"},
+
       {id:6, name:"Шорты Acne Studios", price:90,
-       img:["https://kappa.lol/UDQ5kU.jpg"],
-       desc:"Комфортные шорты"},
+       img:["https://kappa.lol/UDQ5kU.jpg", "https://kappa.lol/JMHCaM.jpg", "https://kappa.lol/HttpQq.jpg", "https://kappa.lol/5nBYQa.jpg", "https://kappa.lol/c88lz1.jpg", "https://kappa.lol/GSP5IQ.jpg"],
+       desc:"Комфортные шорты Acne Studios"},
+
       {id:7, name:"Худи Acne Studios Stockholm 1996", price:90,
-       img:["https://kappa.lol/WMQfJK.jpg"],
+       img:["https://kappa.lol/WMQfJK.jpg", "https://kappa.lol/pGk89F.jpg", "https://kappa.lol/V9BdIW.jpg"],
        desc:"Худи в стиле 1996 года"},
-      // Дополнительные товары для второй страницы
-      {id:8, name:"Bomber Rick Owens", price:110,
-       img:["https://kappa.lol/random1.jpg"],
-       desc:"Тяжёлый бомбер Rick Owens"},
-      {id:9, name:"Джинсы Balenciaga", price:95,
-       img:["https://kappa.lol/random2.jpg"],
-       desc:"Оверсайз джинсы Balenciaga"},
-      {id:10, name:"Худи Chrome Hearts", price:120,
-       img:["https://kappa.lol/random3.jpg"],
-       desc:"Худи Chrome Hearts с кроссом"},
-      {id:11, name:"Футболка Undercover", price:65,
-       img:["https://kappa.lol/random4.jpg"],
-       desc:"Undercover x fragment"},
-      {id:12, name:"Штаны Number (N)ine", price:85,
-       img:["https://kappa.lol/random5.jpg"],
-       desc:"Винтажные штаны Number (N)ine"}
+
+      {id:8, name:"Футболка Balenciaga х Under Armour", price:45,
+       img:["https://kappa.lol/AHnTaz.jpg", "https://kappa.lol/6s04Ug.jpg", "https://kappa.lol/TFNnNh.jpg", "https://kappa.lol/yGO76H.jpg", "https://kappa.lol/fvgyPu.jpg"],
+       desc:"Баленсиага в коллабе с Андер Армор"},
+
+      {id:9, name:"Футболка Enfants Riches Deprimes", price:50,
+       img:["https://kappa.lol/EYQ7dJ.jpg", "https://kappa.lol/MXloXK.jpg", "https://kappa.lol/ZtJgQS.jpg", "https://kappa.lol/GkKSca.jpg"],
+       desc:"Очень качественная футболка Enfants Riches Deprimes"},
+
+      {id:10, name:"Футболка Erd Melancholy Rich Second Generation", price:50,
+       img:["https://kappa.lol/o0PLJt.jpg", "https://kappa.lol/0jmAGU.jpg", "https://kappa.lol/1LZ77E.jpg"],
+       desc:"Футболка Erd Melancholy Rich Second Generation"},
+
+      {id:11, name:"Футболка Houli Crab ERD23FW", price:50,
+       img:["https://kappa.lol/y5Wc2G.jpg", "https://kappa.lol/50NFto.jpg", "https://kappa.lol/WZajI0.jpg", "https://kappa.lol/92gG0n.jpg"],
+       desc:"Очень стильная футболка Houli Crab ERD"}
     ];
 
     function loadCart() {
@@ -384,7 +350,7 @@
           <img src="${p.img[0]}">
           <div class="product-info">
             <h3>${p.name}</h3>
-            <p class="price">${p.price}$</p>
+            <p class="price">${p.price}$ <span class="price-grn">(${(p.price * USD_TO_UAH)} ₴)</span></p>
           </div>
         `;
         container.appendChild(div);
@@ -401,10 +367,7 @@
         const btn = document.createElement('button');
         btn.textContent = i;
         btn.classList.toggle('active', i === currentPage);
-        btn.onclick = () => {
-          currentPage = i;
-          renderShop();
-        };
+        btn.onclick = () => { currentPage = i; renderShop(); };
         container.appendChild(btn);
       }
     }
@@ -415,7 +378,7 @@
       modal.style.display = 'flex';
 
       document.getElementById('modalName').textContent = product.name;
-      document.getElementById('modalPrice').textContent = product.price + '$';
+      document.getElementById('modalPrice').innerHTML = `${product.price}$ <span class="price-grn">(${(product.price * USD_TO_UAH)} ₴)</span>`;
       document.getElementById('modalDesc').textContent = product.desc || 'Описание отсутствует';
 
       const imagesContainer = document.getElementById('modalImages');
@@ -433,7 +396,6 @@
 
     function addCurrentToCart() {
       if (!currentProduct) return;
-
       const btn = document.querySelector('#modal .buy');
       const original = btn.textContent;
 
@@ -466,14 +428,16 @@
         div.innerHTML = `
           <img src="${item.img[0]}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;">
           <span style="flex:1;margin-left:15px;">${item.name}</span>
-          <span style="margin-right:15px;">${item.price}$</span>
+          <span style="margin-right:15px;">
+            ${item.price}$ <span class="price-grn">(${(item.price * USD_TO_UAH)} ₴)</span>
+          </span>
           <button onclick="removeFromCart(${i})" style="color:#ff5555;background:none;border:none;font-size:24px;">✕</button>
         `;
         container.appendChild(div);
       });
 
       document.getElementById('total-usd').textContent = total;
-      document.getElementById('total-uah').textContent = Math.round(total * 41);
+      document.getElementById('total-uah').textContent = Math.round(total * USD_TO_UAH);
     }
 
     function removeFromCart(i) {
@@ -495,7 +459,27 @@
         Telegram.WebApp.showAlert("Корзина пустая");
         return;
       }
-      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!");
+
+      const totalUsd = cart.reduce((sum, item) => sum + item.price, 0);
+      const totalUah = Math.round(totalUsd * USD_TO_UAH);
+      const orderList = cart.map(item => `• ${item.name} — ${item.price}$ (${Math.round(item.price * USD_TO_UAH)} ₴)`).join('\n');
+
+      fetch(`https://api.telegram.org/bot8472467963:AAGbG_oLzzwXmN_zMWOVEvsrUx4jsY1Hb-8/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: 5882542766,
+          text: `🛍 *Новый заказ с сайта!*\n\n` +
+                `👤 Покупатель: ${Telegram.WebApp.initDataUnsafe.user?.first_name || 'Пользователь'}\n` +
+                `🆔 ID: ${Telegram.WebApp.initDataUnsafe.user?.id || 'Неизвестно'}\n\n` +
+                `📦 Товары:\n${orderList}\n\n` +
+                `💰 Итого: ${totalUsd}$ (${totalUah} ₴)`,
+          parse_mode: "Markdown"
+        })
+      });
+
+      Telegram.WebApp.showAlert(`✅ Заказ отправлен менеджеру!\n\nИтого: ${totalUsd}$ (${totalUah} ₴)`);
+
       cart = [];
       saveCart();
       updateCart();
