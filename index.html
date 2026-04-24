@@ -83,12 +83,8 @@
 
     .filters { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 30px; }
     .filter-btn {
-      padding: 10px 20px;
-      background: rgba(28,28,28,0.9);
-      border: 2px solid #444;
-      color: #ddd;
-      border-radius: 12px;
-      cursor: pointer;
+      padding: 10px 20px; background: rgba(28,28,28,0.9); border: 2px solid #444;
+      color: #ddd; border-radius: 12px; cursor: pointer;
     }
     .filter-btn.active { background: var(--red); border-color: var(--red); color: white; }
 
@@ -112,12 +108,8 @@
 
     .pagination { display: flex; justify-content: center; gap: 12px; margin: 45px 0 30px; }
     .pagination button {
-      padding: 12px 22px;
-      background: rgba(34,34,34,0.9);
-      border: 2px solid #555;
-      color: #ddd;
-      border-radius: 12px;
-      cursor: pointer;
+      padding: 12px 22px; background: rgba(34,34,34,0.9); border: 2px solid #555;
+      color: #ddd; border-radius: 12px; cursor: pointer;
     }
     .pagination button.active, .pagination button:hover { background: var(--red); border-color: var(--red); }
 
@@ -172,7 +164,6 @@
       border-radius: 16px;
     }
 
-    /* Новое: поле телефона */
     #phone-input {
       width: 100%;
       padding: 14px;
@@ -193,9 +184,72 @@
   </style>
 </head>
 <body>
-  <!-- ... Весь HTML до корзины остаётся тот же ... -->
+  <header>
+    <h1>DEAD ARCHIVE</h1>
+    <p class="subtitle">ARCHIVE • OPIUM</p>
+  </header>
 
-  <!-- Корзина (обновлённая) -->
+  <nav>
+    <button onclick="showSection('home')" class="active">Главная</button>
+    <button onclick="showSection('shop')">Магазин</button>
+    <button onclick="showSection('about')">О нас</button>
+    <button onclick="showSection('support')">Поддержка</button>
+    <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
+  </nav>
+
+  <!-- Главная -->
+  <div id="home" class="section active">
+    <div class="opium-grid">
+      <img src="https://kappa.lol/57GHW9" alt="new vibe">
+      <img src="https://kappa.lol/nx0l01" alt="opium">
+      <img src="https://kappa.lol/Abp4l7" alt="opium">
+    </div>
+    <div class="promo">
+      <h2>🔥 Уже купили в DEAD Archive</h2>
+      <ul>
+        <li>✅ Houli Crab ERD — самый популярный товар</li>
+        <li>✅ Vetements Polizei — Ебанутый худак, сам гоняю, Советую</li>
+        <li>✅ Maison Margiela штаны — Очень круто выглядят на теле</li>
+        <li>✅ Mowalola Double Sweat — лучшее качество в этом сезоне</li>
+      </ul>
+      <p style="margin-top:20px; color:#ffaa44; font-weight:600;">
+        Не упусти свой вайб. Пока всё в наличии.
+      </p>
+    </div>
+  </div>
+
+  <!-- Магазин -->
+  <div id="shop" class="section">
+    <h2 style="color:#ff3333; margin-bottom:20px; text-align:center; font-size:2.2em;">Каталог шмота</h2>
+    <div class="filters" id="filters"></div>
+    <div class="product-grid" id="products"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <!-- О нас -->
+  <div id="about" class="section">
+    <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">О нас</h2>
+    <p style="font-size:1.25em; line-height:1.7; max-width:720px; margin:0 auto; text-align:center;">
+      DEAD Archive — это не просто магазин реплик.<br>
+      Это целая команда людей, которые помогут тебе научится одеватся...<br>
+      Этот бот создан чтобы покупателям было удобнее.
+    </p>
+  </div>
+
+  <!-- Поддержка -->
+  <div id="support" class="section">
+    <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">Поддержка</h2>
+    <p style="font-size:1.3em; text-align:center; line-height:1.8;">
+      Есть вопросы по заказу? Пиши мне напрямую.
+    </p>
+    <div style="text-align:center; margin-top:50px;">
+      <a href="https://t.me/sssdopsinn" target="_blank" style="color:#ff6666; font-size:1.5em; text-decoration:none; font-weight:bold;">
+        → Написать в поддержку ←
+      </a>
+    </div>
+  </div>
+
+  <!-- Корзина -->
   <div id="cart" class="section">
     <h2 style="color:#ff3333; margin-bottom:25px;">Твоя корзина</h2>
     <button onclick="clearCart()" style="margin-bottom:15px; padding:10px 20px; background:#333; border:none; color:#ddd; border-radius:8px;">
@@ -214,7 +268,7 @@
     <button onclick="checkout()" class="checkout-btn">Оформить заказ</button>
   </div>
 
-  <!-- Остальной HTML (модалка, footer) без изменений -->
+  <!-- Модальное окно -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">×</span>
@@ -245,47 +299,146 @@
     const itemsPerPage = 6;
 
     const products = [
-      {id:1, name:"Футболка Mowalola Double Sweat", price:50, category:"Футболки",
-       img:["https://kappa.lol/cLC3CA.jpg", "https://kappa.lol/3sjJSI.jpg", "https://kappa.lol/fJbkmo.jpg", "https://kappa.lol/Nu52GS.jpg"], desc:"Футболка Mowalola с двойным принтом"},
-      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, category:"Худи",
-       img:["https://kappa.lol/IEzPpD.jpg", "https://kappa.lol/VGOyOY.jpg", "https://kappa.lol/kApzXs.jpg"], desc:"Тёплый зип-худи в стиле Grailz"},
-      {id:3, name:"Джинсы Acne Studios", price:80, category:"Штаны",
-       img:["https://kappa.lol/6aKBo5.jpg"], desc:"Широкие чёрные джинсы"},
-      {id:4, name:"Худи Vetements Polizei", price:80, category:"Худи",
-       img:["https://kappa.lol/9vC7xw.jpg", "https://kappa.lol/j00CDM.jpg", "https://kappa.lol/A8IFEN.jpg", "https://kappa.lol/5w4C3w.jpg"], desc:"Культовая худи с полицейским принтом"},
-      {id:5, name:"Штаны Maison Margiela", price:60, category:"Штаны",
-       img:["https://kappa.lol/upj6ke.jpg", "https://kappa.lol/LJY5sq.jpg", "https://kappa.lol/6Shbdt.jpg", "https://kappa.lol/EzY4yI.jpg", "https://kappa.lol/sCYSO2.jpg"], desc:"Стильные штаны Maison Margiela"},
-      {id:6, name:"Шорты Acne Studios", price:48, category:"Шорты",
-       img:["https://kappa.lol/UDQ5kU.jpg", "https://kappa.lol/JMHCaM.jpg", "https://kappa.lol/HttpQq.jpg", "https://kappa.lol/5nBYQa.jpg", "https://kappa.lol/c88lz1.jpg", "https://kappa.lol/GSP5IQ.jpg"], desc:"Комфортные шорты Acne Studios"},
-      {id:7, name:"Худи Acne Studios Stockholm 1996", price:75, category:"Худи",
-       img:["https://kappa.lol/WMQfJK.jpg", "https://kappa.lol/pGk89F.jpg", "https://kappa.lol/V9BdIW.jpg"], desc:"Худи в стиле 1996 года"},
-      {id:8, name:"Футболка Balenciaga х Under Armour", price:45, category:"Футболки",
-       img:["https://kappa.lol/AHnTaz.jpg", "https://kappa.lol/6s04Ug.jpg", "https://kappa.lol/TFNnNh.jpg", "https://kappa.lol/yGO76H.jpg", "https://kappa.lol/fvgyPu.jpg"], desc:"Баленсиага в коллабе с Андер Армор"},
-      {id:9, name:"Футболка Enfants Riches Deprimes", price:50, category:"Футболки",
-       img:["https://kappa.lol/EYQ7dJ.jpg", "https://kappa.lol/MXloXK.jpg", "https://kappa.lol/ZtJgQS.jpg", "https://kappa.lol/GkKSca.jpg"], desc:"Очень качественная футболка Enfants Riches Deprimes"},
-      {id:10, name:"Футболка Erd Melancholy Rich Second Generation", price:50, category:"Футболки",
-       img:["https://kappa.lol/o0PLJt.jpg", "https://kappa.lol/0jmAGU.jpg", "https://kappa.lol/1LZ77E.jpg"], desc:"Футболка Erd Melancholy Rich Second Generation"},
-      {id:11, name:"Футболка Houli Crab ERD23FW", price:50, category:"Футболки",
-       img:["https://kappa.lol/y5Wc2G.jpg", "https://kappa.lol/50NFto.jpg", "https://kappa.lol/WZajI0.jpg", "https://kappa.lol/92gG0n.jpg"], desc:"Очень стильная футболка Houli Crab ERD"}
+      {id:1, name:"Футболка Mowalola Double Sweat", price:50, category:"Футболки", img:["https://kappa.lol/cLC3CA.jpg","https://kappa.lol/3sjJSI.jpg","https://kappa.lol/fJbkmo.jpg","https://kappa.lol/Nu52GS.jpg"], desc:"Футболка Mowalola с двойным принтом"},
+      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, category:"Худи", img:["https://kappa.lol/IEzPpD.jpg","https://kappa.lol/VGOyOY.jpg","https://kappa.lol/kApzXs.jpg"], desc:"Тёплый зип-худи в стиле Grailz"},
+      {id:3, name:"Джинсы Acne Studios", price:80, category:"Штаны", img:["https://kappa.lol/6aKBo5.jpg"], desc:"Широкие чёрные джинсы"},
+      {id:4, name:"Худи Vetements Polizei", price:80, category:"Худи", img:["https://kappa.lol/9vC7xw.jpg","https://kappa.lol/j00CDM.jpg","https://kappa.lol/A8IFEN.jpg","https://kappa.lol/5w4C3w.jpg"], desc:"Культовая худи с полицейским принтом"},
+      {id:5, name:"Штаны Maison Margiela", price:60, category:"Штаны", img:["https://kappa.lol/upj6ke.jpg","https://kappa.lol/LJY5sq.jpg","https://kappa.lol/6Shbdt.jpg","https://kappa.lol/EzY4yI.jpg","https://kappa.lol/sCYSO2.jpg"], desc:"Стильные штаны Maison Margiela"},
+      {id:6, name:"Шорты Acne Studios", price:48, category:"Шорты", img:["https://kappa.lol/UDQ5kU.jpg","https://kappa.lol/JMHCaM.jpg","https://kappa.lol/HttpQq.jpg","https://kappa.lol/5nBYQa.jpg","https://kappa.lol/c88lz1.jpg","https://kappa.lol/GSP5IQ.jpg"], desc:"Комфортные шорты Acne Studios"},
+      {id:7, name:"Худи Acne Studios Stockholm 1996", price:75, category:"Худи", img:["https://kappa.lol/WMQfJK.jpg","https://kappa.lol/pGk89F.jpg","https://kappa.lol/V9BdIW.jpg"], desc:"Худи в стиле 1996 года"},
+      {id:8, name:"Футболка Balenciaga х Under Armour", price:45, category:"Футболки", img:["https://kappa.lol/AHnTaz.jpg","https://kappa.lol/6s04Ug.jpg","https://kappa.lol/TFNnNh.jpg","https://kappa.lol/yGO76H.jpg","https://kappa.lol/fvgyPu.jpg"], desc:"Баленсиага в коллабе с Андер Армор"},
+      {id:9, name:"Футболка Enfants Riches Deprimes", price:50, category:"Футболки", img:["https://kappa.lol/EYQ7dJ.jpg","https://kappa.lol/MXloXK.jpg","https://kappa.lol/ZtJgQS.jpg","https://kappa.lol/GkKSca.jpg"], desc:"Очень качественная футболка Enfants Riches Deprimes"},
+      {id:10, name:"Футболка Erd Melancholy Rich Second Generation", price:50, category:"Футболки", img:["https://kappa.lol/o0PLJt.jpg","https://kappa.lol/0jmAGU.jpg","https://kappa.lol/1LZ77E.jpg"], desc:"Футболка Erd Melancholy Rich Second Generation"},
+      {id:11, name:"Футболка Houli Crab ERD23FW", price:50, category:"Футболки", img:["https://kappa.lol/y5Wc2G.jpg","https://kappa.lol/50NFto.jpg","https://kappa.lol/WZajI0.jpg","https://kappa.lol/92gG0n.jpg"], desc:"Очень стильная футболка Houli Crab ERD"}
     ];
 
-    // Все остальные функции (loadCart, renderShop, openModal и т.д.) — без изменений
-    // (я их не копирую сюда, чтобы не было слишком длинно, но они остаются точно такими же)
+    function loadCart() {
+      const saved = localStorage.getItem('deadarchive_cart');
+      if (saved) cart = JSON.parse(saved);
+      updateCart();
+    }
+    function saveCart() {
+      localStorage.setItem('deadarchive_cart', JSON.stringify(cart));
+    }
+    function getFilteredProducts() {
+      if (currentCategory === 'all') return products;
+      return products.filter(p => p.category === currentCategory);
+    }
+    function renderFilters() {
+      const categories = ['all', 'Футболки', 'Худи', 'Штаны', 'Шорты'];
+      const container = document.getElementById('filters');
+      container.innerHTML = '';
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = `filter-btn ${cat === currentCategory ? 'active' : ''}`;
+        btn.textContent = cat === 'all' ? 'Все' : cat;
+        btn.onclick = () => {
+          currentCategory = cat;
+          currentPage = 1;
+          renderFilters();
+          renderShop();
+        };
+        container.appendChild(btn);
+      });
+    }
+    function renderShop() {
+      const container = document.getElementById('products');
+      container.innerHTML = '';
+      const filtered = getFilteredProducts();
+      const start = (currentPage - 1) * itemsPerPage;
+      const currentProducts = filtered.slice(start, start + itemsPerPage);
+      currentProducts.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'product';
+        div.onclick = () => openModal(p);
+        div.innerHTML = `
+          <img src="${p.img[0]}">
+          <div class="product-info">
+            <h3>${p.name}</h3>
+            <p class="price">${p.price}$ <span class="price-grn">(${(p.price * USD_TO_UAH)} ₴)</span></p>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      renderPagination(filtered.length);
+    }
+    function renderPagination(totalItems) {
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      const container = document.getElementById('pagination');
+      container.innerHTML = '';
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.classList.toggle('active', i === currentPage);
+        btn.onclick = () => { currentPage = i; renderShop(); };
+        container.appendChild(btn);
+      }
+    }
+    function openModal(product) {
+      currentProduct = product;
+      document.getElementById('modal').style.display = 'flex';
+      document.getElementById('modalName').textContent = product.name;
+      document.getElementById('modalPrice').innerHTML = `${product.price}$ <span class="price-grn">(${(product.price * USD_TO_UAH)} ₴)</span>`;
+      document.getElementById('modalDesc').textContent = product.desc;
+      const imagesContainer = document.getElementById('modalImages');
+      imagesContainer.innerHTML = '';
+      product.img.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        imagesContainer.appendChild(img);
+      });
+    }
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+    function addCurrentToCart() {
+      if (!currentProduct) return;
+      cart.push(currentProduct);
+      saveCart();
+      updateCart();
+      const btn = document.querySelector('#modal .buy');
+      btn.textContent = "✓ Добавлено";
+      btn.classList.add('added');
+      Telegram.WebApp.showToast(`✅ Добавлено: ${currentProduct.name}`);
+      setTimeout(() => {
+        btn.textContent = "Добавить в корзину";
+        btn.classList.remove('added');
+        closeModal();
+      }, 1400);
+    }
+    function updateCart() {
+      document.getElementById('cart-count').textContent = cart.length;
+      const container = document.getElementById('cart-items');
+      container.innerHTML = '';
+      let total = 0;
+      cart.forEach((item, i) => {
+        total += item.price;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <img src="${item.img[0]}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;">
+          <span style="flex:1;margin-left:15px;">${item.name}</span>
+          <span style="margin-right:15px;">${item.price}$</span>
+          <button onclick="removeFromCart(${i})" style="color:#ff5555;background:none;border:none;font-size:24px;">✕</button>
+        `;
+        container.appendChild(div);
+      });
+      document.getElementById('total-usd').textContent = total;
+      document.getElementById('total-uah').textContent = Math.round(total * USD_TO_UAH);
+    }
+    function removeFromCart(i) {
+      cart.splice(i, 1);
+      saveCart();
+      updateCart();
+    }
+    function clearCart() {
+      if (confirm("Очистить всю корзину?")) {
+        cart = [];
+        saveCart();
+        updateCart();
+      }
+    }
 
-    function loadCart() { /* ... */ }
-    function saveCart() { /* ... */ }
-    function getFilteredProducts() { /* ... */ }
-    function renderFilters() { /* ... */ }
-    function renderShop() { /* ... */ }
-    function renderPagination() { /* ... */ }
-    function openModal(product) { /* ... */ }
-    function closeModal() { /* ... */ }
-    function addCurrentToCart() { /* ... */ }
-    function updateCart() { /* ... */ }
-    function removeFromCart(i) { /* ... */ }
-    function clearCart() { /* ... */ }
-
-    // ====================== УЛУЧШЕННАЯ CHECKOUT ======================
     function checkout() {
       if (cart.length === 0) {
         Telegram.WebApp.showAlert("Корзина пустая");
@@ -293,14 +446,12 @@
       }
 
       const phone = document.getElementById('phone-input').value.trim();
-      if (!phone) {
-        Telegram.WebApp.showAlert("Введите номер телефона!");
+      if (!phone || phone.length < 10) {
+        Telegram.WebApp.showAlert("Введите корректный номер телефона!");
         return;
       }
 
-      if (!confirm(`Подтверждаете заказ?\n\nНомер: ${phone}\nТоваров: ${cart.length}\nИтого: ${document.getElementById('total-usd').textContent}$`)) {
-        return;
-      }
+      if (!confirm(`Подтверждаете заказ на номер ${phone}?\nТоваров: ${cart.length}`)) return;
 
       const totalUsd = cart.reduce((sum, item) => sum + item.price, 0);
       const totalUah = Math.round(totalUsd * USD_TO_UAH);
@@ -310,38 +461,44 @@
       const username = user.username ? `@${user.username}` : user.first_name || "Пользователь";
 
       const message = `🛍 *Новый заказ с DEAD Archive!*\n\n` +
-                      `👤 Покупатель: ${username}\n` +
-                      `🆔 ID: ${user.id || "Неизвестно"}\n` +
+                      `👤 ${username}\n` +
+                      `🆔 ${user.id || "Неизвестно"}\n` +
                       `📱 Телефон: ${phone}\n\n` +
-                      `📦 Товары:\n${orderList}\n\n` +
+                      `📦 ${orderList}\n\n` +
                       `💰 Итого: ${totalUsd}$ (${totalUah} ₴)`;
 
       fetch('https://api.telegram.org/bot8472467963:AAGbG_oLzzwXmN_zMWOVEvsrUx4jsY1Hb-8/sendMessage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: 5882542766,
-          text: message,
-          parse_mode: "Markdown"
-        })
+        body: JSON.stringify({ chat_id: 5882542766, text: message, parse_mode: "Markdown" })
       })
       .then(r => r.json())
       .then(data => {
-        if (data.ok) {
-          Telegram.WebApp.showAlert(`✅ Заказ успешно отправлен!\nИтого: ${totalUsd}$`);
-        } else {
-          Telegram.WebApp.showAlert("❌ Ошибка отправки");
-        }
+        if (data.ok) Telegram.WebApp.showAlert(`✅ Заказ отправлен!\nИтого: ${totalUsd}$`);
+        else Telegram.WebApp.showAlert("Ошибка отправки");
       })
-      .catch(() => Telegram.WebApp.showAlert("❌ Нет соединения"));
+      .catch(() => Telegram.WebApp.showAlert("Нет соединения"));
 
       cart = [];
       saveCart();
       updateCart();
     }
-    // ============================================================
 
-    function showSection(section) { /* ... без изменений ... */ }
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(section).classList.add('active');
+
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(btn => {
+        if (btn.getAttribute('onclick').includes(`'${section}'`)) btn.classList.add('active');
+      });
+
+      if (section === 'shop') {
+        currentPage = 1;
+        renderFilters();
+        renderShop();
+      }
+    }
 
     // Инициализация
     loadCart();
