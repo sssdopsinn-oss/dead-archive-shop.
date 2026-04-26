@@ -33,13 +33,26 @@
     }
 
     .lang-switch {
-      position: absolute; top: 15px; right: 15px; display: flex; gap: 5px;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      display: flex;
+      gap: 5px;
     }
     .lang-switch button {
-      padding: 7px 12px; background: rgba(255,255,255,0.1); border: 1px solid #555;
-      color: #ddd; border-radius: 8px; cursor: pointer; font-size: 0.95em;
+      padding: 7px 12px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid #555;
+      color: #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95em;
     }
-    .lang-switch button.active { background: var(--red); border-color: var(--red); color: white; }
+    .lang-switch button.active {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+    }
 
     h1 { font-size: 3.2em; font-weight: 900; letter-spacing: 8px; color: #ff1a1a; text-shadow: 0 0 45px rgba(230,0,0,0.8); }
     .subtitle { color: #aaa; font-size: 1.15em; letter-spacing: 3px; margin-top: 8px; }
@@ -76,7 +89,6 @@
   </style>
 </head>
 <body>
-  <!-- Header + Lang Switch + Nav -->
   <header>
     <h1 id="title">DEAD ARCHIVE</h1>
     <p class="subtitle" id="subtitle">ARCHIVE • OPIUM</p>
@@ -96,9 +108,7 @@
     <button onclick="showSection('cart')" id="nav-cart">Корзина (<span id="cart-count">0</span>)</button>
   </nav>
 
-  <!-- Главная, Магазин, О нас, Поддержка, Корзина, Модалка — как раньше -->
-  <!-- (я оставил их полностью) -->
-
+  <!-- Главная -->
   <div id="home" class="section active">
     <div class="opium-grid">
       <img src="https://kappa.lol/57GHW9" alt="vibe">
@@ -117,6 +127,7 @@
     </div>
   </div>
 
+  <!-- Магазин -->
   <div id="shop" class="section">
     <h2 style="color:#ff3333; margin-bottom:20px; text-align:center; font-size:2.2em;" id="shop-title">Каталог шмота</h2>
     <div class="filters" id="filters"></div>
@@ -124,12 +135,49 @@
     <div class="pagination" id="pagination"></div>
   </div>
 
-  <!-- Остальные секции (about, support, cart, modal) оставлены как в твоём оригинале -->
+  <!-- Корзина -->
+  <div id="cart" class="section">
+    <h2 style="color:#ff3333; margin-bottom:25px;" id="cart-title">Твоя корзина</h2>
+    <button onclick="clearCart()" id="clear-cart-btn">Очистить корзину</button>
+    <div id="cart-items"></div>
+
+    <div style="margin:25px 0;">
+      <label style="display:block; margin-bottom:8px; color:#ccc;" id="phone-label">Номер телефона:</label>
+      <input type="tel" id="phone-input" placeholder="+79123456789" value="+79">
+    </div>
+
+    <h3 style="margin:35px 0 20px; text-align:center;">
+      Итого: <span id="total-usd">0</span>$ (<span id="total-uah">0</span> ₴)
+    </h3>
+    <button onclick="checkout()" class="checkout-btn" id="checkout-btn">Оформить заказ</button>
+  </div>
+
+  <!-- Модальное окно -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">×</span>
+      <div class="modal-images" id="modalImages"></div>
+      <div class="modal-info">
+        <h2 id="modalName"></h2>
+        <p class="price" id="modalPrice"></p>
+        <p id="modalDesc"></p>
+        <button onclick="addCurrentToCart()" class="buy" id="add-to-cart-btn">Добавить в корзину</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 Dead Archive Shop<br>
+    <span class="love-dash">Создатель канала очень любит Дашу ❤️</span>
+  </footer>
 
   <script>
-    // ====================== ЯЗЫКИ ======================
-    const translations = { /* полный объект с ru, en, it, uk */ 
-      // (я его уже давал раньше, если нужно — могу повторить)
+    // ==================== ЯЗЫКИ ====================
+    const translations = {
+      ru: { title: "DEAD ARCHIVE", subtitle: "ARCHIVE • OPIUM", navHome: "Главная", navShop: "Магазин", navAbout: "О нас", navSupport: "Поддержка", navCart: "Корзина", promoTitle: "🔥 Уже купили в DEAD Archive", shopTitle: "Каталог шмота", cartTitle: "Твоя корзина", phoneLabel: "Номер телефона:", checkoutBtn: "Оформить заказ", addToCartBtn: "Добавить в корзину" },
+      en: { title: "DEAD ARCHIVE", subtitle: "ARCHIVE • OPIUM", navHome: "Home", navShop: "Shop", navAbout: "About", navSupport: "Support", navCart: "Cart", promoTitle: "🔥 Already Bought", shopTitle: "Catalog", cartTitle: "Your Cart", phoneLabel: "Phone number:", checkoutBtn: "Checkout", addToCartBtn: "Add to Cart" },
+      it: { title: "DEAD ARCHIVE", subtitle: "ARCHIVE • OPIUM", navHome: "Home", navShop: "Negozio", navAbout: "Chi Siamo", navSupport: "Supporto", navCart: "Carrello", promoTitle: "🔥 Già Acquistato", shopTitle: "Catalogo", cartTitle: "Il tuo Carrello", phoneLabel: "Numero di telefono:", checkoutBtn: "Completa Ordine", addToCartBtn: "Aggiungi al Carrello" },
+      uk: { title: "DEAD ARCHIVE", subtitle: "ARCHIVE • OPIUM", navHome: "Головна", navShop: "Магазин", navAbout: "Про нас", navSupport: "Підтримка", navCart: "Кошик", promoTitle: "🔥 Вже купили", shopTitle: "Каталог шмоту", cartTitle: "Твій кошик", phoneLabel: "Номер телефону:", checkoutBtn: "Оформити замовлення", addToCartBtn: "Додати в кошик" }
     };
 
     let currentLang = 'ru';
@@ -137,12 +185,24 @@
     function changeLang(lang) {
       currentLang = lang;
       localStorage.setItem('deadarchive_lang', lang);
-      // обновление всех текстов...
       document.querySelectorAll('.lang-switch button').forEach(b => b.classList.toggle('active', b.id === `btn-${lang}`));
-      // ... (обновление title, nav, promo и т.д.)
+      const t = translations[lang];
+      document.getElementById('title').textContent = t.title;
+      document.getElementById('subtitle').textContent = t.subtitle;
+      document.getElementById('nav-home').textContent = t.navHome;
+      document.getElementById('nav-shop').textContent = t.navShop;
+      document.getElementById('nav-about').textContent = t.navAbout;
+      document.getElementById('nav-support').textContent = t.navSupport;
+      document.getElementById('nav-cart').childNodes[0].nodeValue = t.navCart + " (";
+      document.getElementById('promo-title').textContent = t.promoTitle;
+      document.getElementById('shop-title').textContent = t.shopTitle;
+      document.getElementById('cart-title').textContent = t.cartTitle;
+      document.getElementById('phone-label').textContent = t.phoneLabel;
+      document.getElementById('checkout-btn').textContent = t.checkoutBtn;
+      document.getElementById('add-to-cart-btn').textContent = t.addToCartBtn;
     }
 
-    // ====================== ОСНОВНОЙ КОД ======================
+    // ==================== ОСНОВНОЙ ФУНКЦИОНАЛ ====================
     const USD_TO_UAH = 41;
     let cart = [];
     let currentProduct = null;
@@ -150,24 +210,32 @@
     let currentCategory = 'all';
     const itemsPerPage = 6;
 
-    const products = [ /* твой массив с 11 товарами */ ];
+    const products = [ /* твой массив товаров */ ];
 
-    function loadCart() { /* ... */ }
-    function saveCart() { /* ... */ }
-    function getFilteredProducts() { /* ... */ }
-    function renderFilters() { /* ... */ }
-    function renderShop() { /* ... */ }
-    function renderPagination() { /* ... */ }
-    function openModal(product) { /* ... */ }
-    function closeModal() { /* ... */ }
-    function addCurrentToCart() { /* ... */ }
-    function updateCart() { /* ... */ }
-    function removeFromCart(i) { /* ... */ }
-    function clearCart() { /* ... */ }
+    function loadCart() {
+      const saved = localStorage.getItem('deadarchive_cart');
+      if (saved) cart = JSON.parse(saved);
+      updateCart();
+    }
+    function saveCart() {
+      localStorage.setItem('deadarchive_cart', JSON.stringify(cart));
+    }
+    function getFilteredProducts() {
+      if (currentCategory === 'all') return products;
+      return products.filter(p => p.category === currentCategory);
+    }
+    function renderFilters() { /* код фильтров */ }
+    function renderShop() { /* код рендера товаров */ }
+    function renderPagination() { /* код пагинации */ }
+    function openModal(product) { /* код модалки */ }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    function addCurrentToCart() { /* код добавления */ }
+    function updateCart() { /* код обновления корзины */ }
+    function removeFromCart(i) { /* код удаления */ }
+    function clearCart() { /* код очистки */ }
 
     function checkout() {
       if (cart.length === 0) return Telegram.WebApp.showAlert("Корзина пустая");
-
       const phone = document.getElementById('phone-input').value.trim();
       if (!phone) return Telegram.WebApp.showAlert("Введите номер телефона!");
 
@@ -175,27 +243,29 @@
       const totalUah = Math.round(totalUsd * USD_TO_UAH);
       const orderList = cart.map(item => `• ${item.name} — ${item.price}$`).join('\n');
 
-      const user = Telegram.WebApp.initDataUnsafe?.user || {};
-
-      const message = `🛍 *Новый заказ с DEAD Archive!*\n\n` +
-                      `👤 ${user.first_name || 'Пользователь'}\n` +
-                      `📱 ${phone}\n\n` +
-                      `📦 ${orderList}\n\n` +
-                      `💰 Итого: ${totalUsd}$ (${totalUah} ₴)`;
+      const message = `🛍 Новый заказ!\n\n📱 ${phone}\n\n${orderList}\n\nИтого: ${totalUsd}$ (${totalUah} ₴)`;
 
       fetch('https://api.telegram.org/bot8472467963:AAGbG_oLzzwXmN_zMWOVEvsrUx4jsY1Hb-8/sendMessage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: 5882542766, text: message, parse_mode: "Markdown" })
+        body: JSON.stringify({ chat_id: 5882542766, text: message })
       });
 
-      Telegram.WebApp.showAlert(`✅ Заказ отправлен!\nИтого: ${totalUsd}$`);
+      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!");
       cart = [];
       saveCart();
       updateCart();
     }
 
-    function showSection(section) { /* ... */ }
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(section).classList.add('active');
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(btn => {
+        if (btn.getAttribute('onclick').includes(`'${section}'`)) btn.classList.add('active');
+      });
+      if (section === 'shop') renderShop();
+    }
 
     // Инициализация
     window.onload = () => {
