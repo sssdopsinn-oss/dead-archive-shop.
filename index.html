@@ -23,36 +23,10 @@
       z-index: -1;
     }
 
-    header {
-      background: rgba(8, 8, 8, 0.98);
-      backdrop-filter: blur(20px);
-      padding: 35px 20px 25px;
-      text-align: center;
-      border-bottom: 5px solid var(--red);
-      position: relative;
-    }
-
-    .lang-switch {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      display: flex;
-      gap: 5px;
-    }
-    .lang-switch button {
-      padding: 7px 12px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid #555;
-      color: #ddd;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.95em;
-    }
-    .lang-switch button.active {
-      background: var(--red);
-      border-color: var(--red);
-      color: white;
-    }
+    header { background: rgba(8,8,8,0.98); backdrop-filter: blur(20px); padding: 35px 20px 25px; text-align: center; border-bottom: 5px solid var(--red); position: relative; }
+    .lang-switch { position: absolute; top: 15px; right: 15px; display: flex; gap: 5px; }
+    .lang-switch button { padding: 7px 12px; background: rgba(255,255,255,0.1); border: 1px solid #555; color: #ddd; border-radius: 8px; cursor: pointer; }
+    .lang-switch button.active { background: var(--red); border-color: var(--red); color: white; }
 
     h1 { font-size: 3.2em; font-weight: 900; letter-spacing: 8px; color: #ff1a1a; text-shadow: 0 0 45px rgba(230,0,0,0.8); }
     .subtitle { color: #aaa; font-size: 1.15em; letter-spacing: 3px; margin-top: 8px; }
@@ -83,7 +57,7 @@
     button.buy, .checkout-btn { width: 100%; padding: 18px; background: var(--red); border: none; color: white; border-radius: 14px; margin-top: 15px; font-weight: 700; }
     .cart-item { display: flex; align-items: center; background: rgba(25,25,25,0.95); padding: 16px; margin: 12px 0; border-radius: 16px; }
 
-    #phone-input { width: 100%; padding: 14px; margin: 15px 0; background: #1a1a1a; border: 2px solid #444; color: white; border-radius: 12px; font-size: 1.1em; }
+    #phone-input { width: 100%; padding: 14px; margin: 15px 0; background: #1a1a1a; border: 2px solid #444; color: white; border-radius: 12px; }
 
     footer { text-align: center; padding: 70px 20px 50px; color: #555; font-size: 0.95em; }
   </style>
@@ -142,7 +116,7 @@
     <div id="cart-items"></div>
 
     <div style="margin:25px 0;">
-      <label style="display:block; margin-bottom:8px; color:#ccc;" id="phone-label">Номер телефона:</label>
+      <label style="display:block; margin-bottom:8px; color:#ccc;" id="phone-label">Номер телефона для связи:</label>
       <input type="tel" id="phone-input" placeholder="+79123456789" value="+79">
     </div>
 
@@ -166,16 +140,13 @@
     </div>
   </div>
 
-  <footer>
-    © 2026 Dead Archive Shop<br>
-    <span class="love-dash">Создатель канала очень любит Дашу ❤️</span>
-  </footer>
+  <footer>© 2026 Dead Archive Shop<br><span class="love-dash">Создатель канала очень любит Дашу ❤️</span></footer>
 
   <script>
-    // ==================== ЯЗЫКИ ====================
+    // ====================== ЯЗЫКИ ======================
     const translations = {
-      ru: { title: "DEAD ARCHIVE", subtitle: "ARCHIVE • OPIUM", navHome: "Главная", navShop: "Магазин", navAbout: "О нас", navSupport: "Поддержка", navCart: "Корзина", promoTitle: "🔥 Уже купили в DEAD Archive", shopTitle: "Каталог шмота", cartTitle: "Твоя корзина", phoneLabel: "Номер телефона:", checkoutBtn: "Оформить заказ", addToCartBtn: "Добавить в корзину" },
-      en: { title: "DEAD ARCHIVE", subtitle: "ARCHIVE • OPIUM", navHome: "Home", navShop: "Shop", navAbout: "About", navSupport: "Support", navCart: "Cart", promoTitle: "🔥 Already Bought", shopTitle: "Catalog", cartTitle: "Your Cart", phoneLabel: "Phone number:", checkoutBtn: "Checkout", addToCartBtn: "Add to Cart" },
+      ru: { title: "DEAD ARCHIVE", subtitle: "ARCHIVE • OPIUM", navHome: "Главная", navShop: "Магазин", navAbout: "О нас", navSupport: "Поддержка", navCart: "Корзина", promoTitle: "🔥 Уже купили в DEAD Archive", shopTitle: "Каталог шмота", cartTitle: "Твоя корзина", phoneLabel: "Номер телефона для связи:", checkoutBtn: "Оформить заказ", addToCartBtn: "Добавить в корзину" },
+      en: { title: "DEAD ARCHIVE", subtitle: "ARCHIVE • OPIUM", navHome: "Home", navShop: "Shop", navAbout: "About Us", navSupport: "Support", navCart: "Cart", promoTitle: "🔥 Already Bought", shopTitle: "Catalog", cartTitle: "Your Cart", phoneLabel: "Phone number:", checkoutBtn: "Checkout", addToCartBtn: "Add to Cart" },
       it: { title: "DEAD ARCHIVE", subtitle: "ARCHIVE • OPIUM", navHome: "Home", navShop: "Negozio", navAbout: "Chi Siamo", navSupport: "Supporto", navCart: "Carrello", promoTitle: "🔥 Già Acquistato", shopTitle: "Catalogo", cartTitle: "Il tuo Carrello", phoneLabel: "Numero di telefono:", checkoutBtn: "Completa Ordine", addToCartBtn: "Aggiungi al Carrello" },
       uk: { title: "DEAD ARCHIVE", subtitle: "ARCHIVE • OPIUM", navHome: "Головна", navShop: "Магазин", navAbout: "Про нас", navSupport: "Підтримка", navCart: "Кошик", promoTitle: "🔥 Вже купили", shopTitle: "Каталог шмоту", cartTitle: "Твій кошик", phoneLabel: "Номер телефону:", checkoutBtn: "Оформити замовлення", addToCartBtn: "Додати в кошик" }
     };
@@ -202,7 +173,7 @@
       document.getElementById('add-to-cart-btn').textContent = t.addToCartBtn;
     }
 
-    // ==================== ОСНОВНОЙ ФУНКЦИОНАЛ ====================
+    // ====================== ТОВАРЫ ======================
     const USD_TO_UAH = 41;
     let cart = [];
     let currentProduct = null;
@@ -210,32 +181,133 @@
     let currentCategory = 'all';
     const itemsPerPage = 6;
 
-    const products = [ /* твой массив товаров */ ];
+    const products = [
+      {id:1, name:"Футболка Mowalola Double Sweat", price:50, category:"Футболки", img:["https://kappa.lol/cLC3CA.jpg","https://kappa.lol/3sjJSI.jpg","https://kappa.lol/fJbkmo.jpg","https://kappa.lol/Nu52GS.jpg"], desc:"Футболка Mowalola с двойным принтом"},
+      {id:2, name:"Зип-Худи Grailz Project G/R", price:75, category:"Худи", img:["https://kappa.lol/IEzPpD.jpg","https://kappa.lol/VGOyOY.jpg","https://kappa.lol/kApzXs.jpg"], desc:"Тёплый зип-худи в стиле Grailz"},
+      {id:3, name:"Джинсы Acne Studios", price:80, category:"Штаны", img:["https://kappa.lol/6aKBo5.jpg"], desc:"Широкие чёрные джинсы"},
+      {id:4, name:"Худи Vetements Polizei", price:80, category:"Худи", img:["https://kappa.lol/9vC7xw.jpg","https://kappa.lol/j00CDM.jpg","https://kappa.lol/A8IFEN.jpg","https://kappa.lol/5w4C3w.jpg"], desc:"Культовая худи с полицейским принтом"},
+      {id:5, name:"Штаны Maison Margiela", price:60, category:"Штаны", img:["https://kappa.lol/upj6ke.jpg","https://kappa.lol/LJY5sq.jpg","https://kappa.lol/6Shbdt.jpg","https://kappa.lol/EzY4yI.jpg","https://kappa.lol/sCYSO2.jpg"], desc:"Стильные штаны Maison Margiela"},
+      {id:6, name:"Шорты Acne Studios", price:48, category:"Шорты", img:["https://kappa.lol/UDQ5kU.jpg","https://kappa.lol/JMHCaM.jpg","https://kappa.lol/HttpQq.jpg","https://kappa.lol/5nBYQa.jpg","https://kappa.lol/c88lz1.jpg","https://kappa.lol/GSP5IQ.jpg"], desc:"Комфортные шорты Acne Studios"},
+      {id:7, name:"Худи Acne Studios Stockholm 1996", price:75, category:"Худи", img:["https://kappa.lol/WMQfJK.jpg","https://kappa.lol/pGk89F.jpg","https://kappa.lol/V9BdIW.jpg"], desc:"Худи в стиле 1996 года"},
+      {id:8, name:"Футболка Balenciaga х Under Armour", price:45, category:"Футболки", img:["https://kappa.lol/AHnTaz.jpg","https://kappa.lol/6s04Ug.jpg","https://kappa.lol/TFNnNh.jpg","https://kappa.lol/yGO76H.jpg","https://kappa.lol/fvgyPu.jpg"], desc:"Баленсиага в коллабе с Андер Армор"},
+      {id:9, name:"Футболка Enfants Riches Deprimes", price:50, category:"Футболки", img:["https://kappa.lol/EYQ7dJ.jpg","https://kappa.lol/MXloXK.jpg","https://kappa.lol/ZtJgQS.jpg","https://kappa.lol/GkKSca.jpg"], desc:"Очень качественная футболка Enfants Riches Deprimes"},
+      {id:10, name:"Футболка Erd Melancholy Rich Second Generation", price:50, category:"Футболки", img:["https://kappa.lol/o0PLJt.jpg","https://kappa.lol/0jmAGU.jpg","https://kappa.lol/1LZ77E.jpg"], desc:"Футболка Erd Melancholy Rich Second Generation"},
+      {id:11, name:"Футболка Houli Crab ERD23FW", price:50, category:"Футболки", img:["https://kappa.lol/y5Wc2G.jpg","https://kappa.lol/50NFto.jpg","https://kappa.lol/WZajI0.jpg","https://kappa.lol/92gG0n.jpg"], desc:"Очень стильная футболка Houli Crab ERD"}
+    ];
 
+    // ====================== ФУНКЦИИ ======================
     function loadCart() {
       const saved = localStorage.getItem('deadarchive_cart');
       if (saved) cart = JSON.parse(saved);
       updateCart();
     }
-    function saveCart() {
-      localStorage.setItem('deadarchive_cart', JSON.stringify(cart));
-    }
+    function saveCart() { localStorage.setItem('deadarchive_cart', JSON.stringify(cart)); }
+
     function getFilteredProducts() {
       if (currentCategory === 'all') return products;
       return products.filter(p => p.category === currentCategory);
     }
-    function renderFilters() { /* код фильтров */ }
-    function renderShop() { /* код рендера товаров */ }
-    function renderPagination() { /* код пагинации */ }
-    function openModal(product) { /* код модалки */ }
+
+    function renderShop() {
+      const container = document.getElementById('products');
+      container.innerHTML = '';
+      const filtered = getFilteredProducts();
+      const start = (currentPage - 1) * itemsPerPage;
+      const currentProducts = filtered.slice(start, start + itemsPerPage);
+
+      currentProducts.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'product';
+        div.onclick = () => openModal(p);
+        div.innerHTML = `
+          <img src="${p.img[0]}">
+          <div class="product-info">
+            <h3>${p.name}</h3>
+            <p class="price">${p.price}$ <span class="price-grn">(${(p.price * USD_TO_UAH)} ₴)</span></p>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      renderPagination(filtered.length);
+    }
+
+    function renderPagination(totalItems) {
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      const container = document.getElementById('pagination');
+      container.innerHTML = '';
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.classList.toggle('active', i === currentPage);
+        btn.onclick = () => { currentPage = i; renderShop(); };
+        container.appendChild(btn);
+      }
+    }
+
+    function openModal(product) {
+      currentProduct = product;
+      document.getElementById('modal').style.display = 'flex';
+      document.getElementById('modalName').textContent = product.name;
+      document.getElementById('modalPrice').innerHTML = `${product.price}$ <span class="price-grn">(${(product.price * USD_TO_UAH)} ₴)</span>`;
+      document.getElementById('modalDesc').textContent = product.desc;
+      const imagesContainer = document.getElementById('modalImages');
+      imagesContainer.innerHTML = '';
+      product.img.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        imagesContainer.appendChild(img);
+      });
+    }
+
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
-    function addCurrentToCart() { /* код добавления */ }
-    function updateCart() { /* код обновления корзины */ }
-    function removeFromCart(i) { /* код удаления */ }
-    function clearCart() { /* код очистки */ }
+
+    function addCurrentToCart() {
+      if (!currentProduct) return;
+      cart.push(currentProduct);
+      saveCart();
+      updateCart();
+      Telegram.WebApp.showToast(`✅ Добавлено: ${currentProduct.name}`);
+      setTimeout(() => closeModal(), 800);
+    }
+
+    function updateCart() {
+      document.getElementById('cart-count').textContent = cart.length;
+      const container = document.getElementById('cart-items');
+      container.innerHTML = '';
+      let total = 0;
+      cart.forEach((item, i) => {
+        total += item.price;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <img src="${item.img[0]}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;">
+          <span style="flex:1;margin-left:15px;">${item.name}</span>
+          <span style="margin-right:15px;">${item.price}$</span>
+          <button onclick="removeFromCart(${i})" style="color:#ff5555;background:none;border:none;font-size:24px;">✕</button>
+        `;
+        container.appendChild(div);
+      });
+      document.getElementById('total-usd').textContent = total;
+      document.getElementById('total-uah').textContent = Math.round(total * USD_TO_UAH);
+    }
+
+    function removeFromCart(i) {
+      cart.splice(i, 1);
+      saveCart();
+      updateCart();
+    }
+
+    function clearCart() {
+      if (confirm("Очистить всю корзину?")) {
+        cart = [];
+        saveCart();
+        updateCart();
+      }
+    }
 
     function checkout() {
       if (cart.length === 0) return Telegram.WebApp.showAlert("Корзина пустая");
+
       const phone = document.getElementById('phone-input').value.trim();
       if (!phone) return Telegram.WebApp.showAlert("Введите номер телефона!");
 
@@ -243,7 +315,7 @@
       const totalUah = Math.round(totalUsd * USD_TO_UAH);
       const orderList = cart.map(item => `• ${item.name} — ${item.price}$`).join('\n');
 
-      const message = `🛍 Новый заказ!\n\n📱 ${phone}\n\n${orderList}\n\nИтого: ${totalUsd}$ (${totalUah} ₴)`;
+      const message = `🛍 Новый заказ!\n\n📱 Телефон: ${phone}\n\n${orderList}\n\n💰 Итого: ${totalUsd}$ (${totalUah} ₴)`;
 
       fetch('https://api.telegram.org/bot8472467963:AAGbG_oLzzwXmN_zMWOVEvsrUx4jsY1Hb-8/sendMessage', {
         method: 'POST',
@@ -251,7 +323,7 @@
         body: JSON.stringify({ chat_id: 5882542766, text: message })
       });
 
-      Telegram.WebApp.showAlert("✅ Заказ отправлен менеджеру!");
+      Telegram.WebApp.showAlert(`✅ Заказ отправлен!\nИтого: ${totalUsd}$`);
       cart = [];
       saveCart();
       updateCart();
@@ -260,14 +332,19 @@
     function showSection(section) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(section).classList.add('active');
+
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('nav button').forEach(btn => {
         if (btn.getAttribute('onclick').includes(`'${section}'`)) btn.classList.add('active');
       });
-      if (section === 'shop') renderShop();
+
+      if (section === 'shop') {
+        currentPage = 1;
+        renderShop();
+      }
     }
 
-    // Инициализация
+    // ====================== ЗАПУСК ======================
     window.onload = () => {
       const savedLang = localStorage.getItem('deadarchive_lang') || 'ru';
       changeLang(savedLang);
