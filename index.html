@@ -75,7 +75,7 @@
     .section { display: none; padding: 25px 15px; min-height: 75vh; }
     .section.active { display: block; }
 
-    /* Главная — исправлено */
+    /* Главная */
     .home-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -89,7 +89,6 @@
       object-fit: cover;
       border-radius: 20px;
       border: 1px solid rgba(255,26,26,0.3);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
     .search-bar {
@@ -153,7 +152,12 @@
     button.buy, .checkout-btn {
       width: 100%; padding: 18px; background: linear-gradient(45deg, #e60000, #ff3333);
       border: none; color: white; border-radius: 14px; margin-top: 15px;
-      font-weight: 800; font-size: 1.1em;
+      font-weight: 800; font-size: 1.1em; transition: all 0.4s;
+    }
+
+    button.buy.added {
+      background: #00cc66 !important;
+      transform: scale(1.06);
     }
 
     .cart-item {
@@ -162,7 +166,12 @@
       padding: 16px; margin: 12px 0; border-radius: 16px;
     }
 
-    footer { text-align: center; padding: 70px 20px; color: #555; font-size: 0.95em; }
+    footer {
+      text-align: center;
+      padding: 70px 20px 40px;
+      color: #555;
+      font-size: 0.92em;
+    }
   </style>
 </head>
 <body>
@@ -245,7 +254,10 @@
     </div>
   </div>
 
-  <footer>© 2026 Dead Archive Shop</footer>
+  <footer>
+    © 2026 Dead Archive Shop<br>
+    <span style="color:#ff6666; font-size: 1.1em;">Создатель бота очень любит Дашу ❤️</span>
+  </footer>
 
   <script>
     Telegram.WebApp.ready();
@@ -414,11 +426,22 @@
         Telegram.WebApp.showToast("Уже в корзине");
         return;
       }
+
       cart.push(currentProduct);
       saveCart();
       updateCart();
-      Telegram.WebApp.showToast("✅ Добавлено");
-      closeModal();
+
+      const btn = document.querySelector('#modal .buy');
+      btn.textContent = "✓ Добавлено";
+      btn.classList.add('added');
+
+      Telegram.WebApp.showToast(`✅ ${currentProduct.name}`);
+
+      setTimeout(() => {
+        btn.textContent = "Добавить в корзину";
+        btn.classList.remove('added');
+        closeModal();
+      }, 1600);
     }
 
     async function checkout() {
@@ -438,7 +461,7 @@
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ chat_id: 5882542766, text: text, parse_mode: "Markdown" })
         });
-        Telegram.WebApp.showAlert(`✅ Заказ отправлен! Итого: ${total}$`);
+        Telegram.WebApp.showAlert(`✅ Заказ отправлен!\nИтого: ${total}$`);
         cart = [];
         saveCart();
         updateCart();
