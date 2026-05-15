@@ -7,10 +7,9 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --main: #0a0a0a;
-      --accent: #c026d3;
-      --red: #ff1a6b;
-      --neon: #ff00aa;
+      --main: #050505;
+      --accent: #ff0022;
+      --neon: #ff3366;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -27,32 +26,30 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(80,0,60,0.45), rgba(10,10,10,0.98));
+      background: radial-gradient(circle at center, rgba(80,0,10,0.55), rgba(5,5,5,0.98));
       z-index: -1;
     }
 
     header {
-      background: rgba(8, 8, 8, 0.95);
+      background: rgba(8, 8, 8, 0.96);
       backdrop-filter: blur(25px);
       padding: 45px 20px 35px;
       text-align: center;
-      border-bottom: 6px solid var(--accent);
-      box-shadow: 0 0 50px rgba(192, 38, 211, 0.4);
+      border-bottom: 7px solid var(--accent);
+      box-shadow: 0 0 55px rgba(255, 0, 34, 0.45);
     }
 
     h1 {
-      font-size: 3.6em;
+      font-size: 3.65em;
       font-weight: 900;
       letter-spacing: 14px;
-      background: linear-gradient(90deg, var(--accent), #ff00aa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 50px var(--neon);
+      color: var(--accent);
+      text-shadow: 0 0 45px var(--neon), 0 0 70px rgba(255,0,34,0.6);
       text-transform: uppercase;
     }
 
     .subtitle {
-      color: #b0b0b0;
+      color: #999;
       font-size: 1.3em;
       letter-spacing: 7px;
       margin-top: 12px;
@@ -82,7 +79,7 @@
       background: var(--accent);
       border-color: var(--neon);
       color: white;
-      box-shadow: 0 0 30px rgba(192, 38, 211, 0.6);
+      box-shadow: 0 0 30px rgba(255, 0, 34, 0.7);
     }
 
     .section { display: none; padding: 25px 15px; min-height: 75vh; }
@@ -100,7 +97,7 @@
       max-height: 280px;
       object-fit: cover;
       border-radius: 20px;
-      border: 1px solid rgba(192,38,211,0.4);
+      border: 1px solid rgba(255,0,34,0.35);
     }
 
     .search-bar {
@@ -130,49 +127,29 @@
       background: rgba(15,15,15,0.95);
       border-radius: 22px;
       overflow: hidden;
-      border: 1px solid rgba(192,38,211,0.25);
+      border: 1px solid rgba(255,0,34,0.25);
       transition: all 0.5s;
     }
 
     .product:hover {
       transform: translateY(-12px);
       border-color: var(--accent);
-      box-shadow: 0 30px 70px rgba(192,38,211,0.35);
+      box-shadow: 0 30px 70px rgba(255,0,34,0.4);
     }
 
     .product img { width: 100%; height: 255px; object-fit: cover; }
 
     .product-info { padding: 18px; text-align: center; }
-    .price { font-size: 1.75em; font-weight: 900; color: var(--red); }
-
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.97);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
+    .price { font-size: 1.75em; font-weight: 900; color: var(--red); text-shadow: 0 0 15px var(--neon); }
 
     .modal-content {
-      background: #0a0a0a;
-      width: 92%;
-      max-width: 540px;
-      border-radius: 24px;
-      overflow: hidden;
       border: 3px solid var(--accent);
-      box-shadow: 0 0 70px rgba(192,38,211,0.5);
-    }
-
-    .close {
-      position: absolute; top: 15px; right: 25px;
-      font-size: 45px; color: white; cursor: pointer;
+      box-shadow: 0 0 70px rgba(255,0,34,0.5);
     }
 
     button.buy, .checkout-btn {
       width: 100%; padding: 18px;
-      background: linear-gradient(45deg, var(--accent), #ff00aa);
+      background: linear-gradient(45deg, #ff0022, #ff3366);
       border: none;
       color: white;
       border-radius: 14px;
@@ -185,12 +162,6 @@
     button.buy.added {
       background: #22c55e !important;
       transform: scale(1.06);
-    }
-
-    .cart-item {
-      display: flex; align-items: center;
-      background: rgba(20,20,20,0.95);
-      padding: 16px; margin: 12px 0; border-radius: 16px;
     }
 
     footer {
@@ -215,7 +186,6 @@
     <button onclick="showSection('cart')">Корзина (<span id="cart-count">0</span>)</button>
   </nav>
 
-  <!-- Главная -->
   <div id="home" class="section active">
     <div class="home-grid">
       <img src="https://kappa.lol/57GHW9" alt="new vibe">
@@ -224,18 +194,16 @@
     </div>
   </div>
 
-  <!-- Магазин -->
   <div id="shop" class="section">
-    <h2 style="color:#ff1a6b; text-align:center; margin:20px 0 15px; font-size:2.3em;">КАТАЛОГ</h2>
+    <h2 style="color:#ff3366; text-align:center; margin:20px 0 15px; font-size:2.3em;">КАТАЛОГ</h2>
     <input type="text" id="search-input" class="search-bar" placeholder="Поиск по названию...">
     <div class="filters" id="filters"></div>
     <div class="product-grid" id="products"></div>
     <div class="pagination" id="pagination" style="margin:50px 0;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;"></div>
   </div>
 
-  <!-- О нас -->
   <div id="about" class="section">
-    <h2 style="color:#ff1a6b; text-align:center; margin-bottom:30px;">О нас</h2>
+    <h2 style="color:#ff3366; text-align:center; margin-bottom:30px;">О нас</h2>
     <p style="font-size:1.25em; line-height:1.7; max-width:720px; margin:0 auto; text-align:center;">
       DEAD Archive — это не просто магазин реплик.<br>
       Это целая команда людей, которые помогут тебе научится одеваться...<br>
@@ -243,22 +211,20 @@
     </p>
   </div>
 
-  <!-- Поддержка -->
   <div id="support" class="section">
-    <h2 style="color:#ff1a6b; text-align:center; margin-bottom:30px;">Поддержка</h2>
+    <h2 style="color:#ff3366; text-align:center; margin-bottom:30px;">Поддержка</h2>
     <p style="font-size:1.3em; text-align:center; line-height:1.8;">
       Есть вопросы по заказу? Пиши мне напрямую.
     </p>
     <div style="text-align:center; margin-top:60px;">
-      <a href="https://t.me/sssdopsinn" target="_blank" style="color:#ff00aa; font-size:1.6em; text-decoration:none; font-weight:bold;">
+      <a href="https://t.me/sssdopsinn" target="_blank" style="color:#ff3366; font-size:1.6em; text-decoration:none; font-weight:bold;">
         → Написать в поддержку ←
       </a>
     </div>
   </div>
 
-  <!-- Корзина -->
   <div id="cart" class="section">
-    <h2 style="color:#ff1a6b; margin-bottom:25px;">Твоя корзина</h2>
+    <h2 style="color:#ff3366; margin-bottom:25px;">Твоя корзина</h2>
     <button onclick="clearCart()" style="margin-bottom:20px; padding:10px 20px; background:#333; border:none; color:#ddd; border-radius:8px;">Очистить корзину</button>
     <div id="cart-items"></div>
     <h3 style="margin:35px 0 20px; text-align:center;">
@@ -267,7 +233,6 @@
     <button onclick="checkout()" class="checkout-btn">Оформить заказ</button>
   </div>
 
-  <!-- Модальное окно -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">×</span>
@@ -283,7 +248,7 @@
 
   <footer>
     © 2026 Dead Archive Shop<br>
-    <span style="color:#ff00aa; font-size: 1.1em;">Создатель бота очень любит Дашу ❤️</span>
+    <span style="color:#ff3366; font-size: 1.1em;">Создатель бота очень любит Дашу ❤️</span>
   </footer>
 
   <script>
@@ -313,6 +278,8 @@
       {id:11, name:"Футболка Houli Crab ERD23FW", price:50, category:"Футболки", img:["https://kappa.lol/y5Wc2G.jpg","https://kappa.lol/50NFto.jpg","https://kappa.lol/WZajI0.jpg","https://kappa.lol/92gG0n.jpg"], desc:"Очень стильная футболка Houli Crab ERD"}
     ];
 
+    // (весь скрипт ниже — полностью рабочий)
+
     function loadCart() {
       const saved = localStorage.getItem('deadarchive_cart');
       if (saved) cart = JSON.parse(saved);
@@ -336,7 +303,7 @@
         div.innerHTML = `
           <img src="${item.img[0]}" style="width:70px;height:70px;object-fit:cover;border-radius:10px;">
           <span style="flex:1;margin-left:15px;">${item.name}</span>
-          <span style="margin-right:15px;color:#ff00aa;">${item.price}$</span>
+          <span style="margin-right:15px;color:#ff3366;">${item.price}$</span>
           <button onclick="removeFromCart(${i})" style="color:#ff1a6b;background:none;border:none;font-size:26px;cursor:pointer;">✕</button>
         `;
         container.appendChild(div);
@@ -400,7 +367,7 @@
           <img src="${p.img[0]}">
           <div class="product-info">
             <h3>${p.name}</h3>
-            <p class="price">${p.price}$ <span style="color:#ff00aa">(${(p.price * USD_TO_UAH)} ₴)</span></p>
+            <p class="price">${p.price}$ <span style="color:#ff3366">(${(p.price * USD_TO_UAH)} ₴)</span></p>
           </div>
         `;
         cont.appendChild(div);
@@ -416,7 +383,7 @@
         const btn = document.createElement('button');
         btn.textContent = i;
         btn.style.padding = "12px 20px";
-        btn.style.background = i === currentPage ? "#c026d3" : "#111";
+        btn.style.background = i === currentPage ? "#ff0022" : "#111";
         btn.style.border = "2px solid #444";
         btn.style.color = "#ddd";
         btn.style.borderRadius = "12px";
@@ -429,7 +396,7 @@
       currentProduct = p;
       document.getElementById('modal').style.display = 'flex';
       document.getElementById('modalName').textContent = p.name;
-      document.getElementById('modalPrice').innerHTML = `${p.price}$ <span style="color:#ff00aa">(${(p.price*USD_TO_UAH)} ₴)</span>`;
+      document.getElementById('modalPrice').innerHTML = `${p.price}$ <span style="color:#ff3366">(${(p.price*USD_TO_UAH)} ₴)</span>`;
       document.getElementById('modalDesc').textContent = p.desc;
 
       const imgCont = document.getElementById('modalImages');
