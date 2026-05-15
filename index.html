@@ -6,7 +6,12 @@
   <title>DEAD Archive SHOP</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    :root { --red: #ff1a1a; --neon: #ff3333; }
+    :root {
+      --main: #0a0a0a;
+      --accent: #c026d3;
+      --red: #ff1a6b;
+      --neon: #ff00aa;
+    }
 
     * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -22,28 +27,36 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(30,0,0,0.65), rgba(5,5,5,0.97));
+      background: radial-gradient(circle at center, rgba(80,0,60,0.45), rgba(10,10,10,0.98));
       z-index: -1;
     }
 
     header {
-      background: rgba(6, 6, 6, 0.96);
+      background: rgba(8, 8, 8, 0.95);
       backdrop-filter: blur(25px);
-      padding: 40px 20px 30px;
+      padding: 45px 20px 35px;
       text-align: center;
-      border-bottom: 7px solid var(--red);
+      border-bottom: 6px solid var(--accent);
+      box-shadow: 0 0 50px rgba(192, 38, 211, 0.4);
     }
 
     h1 {
-      font-size: 3.5em;
+      font-size: 3.6em;
       font-weight: 900;
-      letter-spacing: 12px;
-      color: #ff1a1a;
-      text-shadow: 0 0 40px var(--neon);
+      letter-spacing: 14px;
+      background: linear-gradient(90deg, var(--accent), #ff00aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 50px var(--neon);
       text-transform: uppercase;
     }
 
-    .subtitle { color: #aaa; font-size: 1.25em; letter-spacing: 6px; margin-top: 10px; }
+    .subtitle {
+      color: #b0b0b0;
+      font-size: 1.3em;
+      letter-spacing: 7px;
+      margin-top: 12px;
+    }
 
     nav {
       background: rgba(8,8,8,0.98);
@@ -55,10 +68,10 @@
     }
 
     nav button {
-      padding: 14px 26px;
+      padding: 15px 28px;
       background: #111;
       border: 2px solid #333;
-      color: #ccc;
+      color: #ddd;
       border-radius: 12px;
       font-weight: 700;
       text-transform: uppercase;
@@ -66,16 +79,15 @@
     }
 
     nav button.active, nav button:hover {
-      background: var(--red);
+      background: var(--accent);
       border-color: var(--neon);
       color: white;
-      box-shadow: 0 0 25px rgba(255,26,26,0.6);
+      box-shadow: 0 0 30px rgba(192, 38, 211, 0.6);
     }
 
     .section { display: none; padding: 25px 15px; min-height: 75vh; }
     .section.active { display: block; }
 
-    /* Главная */
     .home-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -88,21 +100,25 @@
       max-height: 280px;
       object-fit: cover;
       border-radius: 20px;
-      border: 1px solid rgba(255,26,26,0.3);
+      border: 1px solid rgba(192,38,211,0.4);
     }
 
     .search-bar {
       width: 100%; padding: 16px 20px; margin: 20px 0 30px;
-      background: #111; border: 2px solid #333; border-radius: 14px;
+      background: #111; border: 2px solid #444; border-radius: 14px;
       color: white; font-size: 1.1em;
     }
 
     .filters { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 30px; }
     .filter-btn {
-      padding: 12px 24px; background: #111; border: 2px solid #333;
+      padding: 12px 24px; background: #111; border: 2px solid #444;
       color: #ddd; border-radius: 12px; cursor: pointer;
     }
-    .filter-btn.active { background: var(--red); border-color: var(--neon); color: white; }
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--neon);
+      color: white;
+    }
 
     .product-grid {
       display: grid;
@@ -111,19 +127,23 @@
     }
 
     .product {
-      background: rgba(13,13,13,0.95);
-      border-radius: 20px;
+      background: rgba(15,15,15,0.95);
+      border-radius: 22px;
       overflow: hidden;
-      border: 1px solid rgba(255,26,26,0.2);
-      transition: all 0.4s;
+      border: 1px solid rgba(192,38,211,0.25);
+      transition: all 0.5s;
     }
 
-    .product:hover { transform: translateY(-10px); box-shadow: 0 25px 60px rgba(255,26,26,0.4); }
+    .product:hover {
+      transform: translateY(-12px);
+      border-color: var(--accent);
+      box-shadow: 0 30px 70px rgba(192,38,211,0.35);
+    }
 
-    .product img { width: 100%; height: 250px; object-fit: cover; }
+    .product img { width: 100%; height: 255px; object-fit: cover; }
 
     .product-info { padding: 18px; text-align: center; }
-    .price { font-size: 1.7em; font-weight: 900; color: var(--neon); }
+    .price { font-size: 1.75em; font-weight: 900; color: var(--red); }
 
     .modal {
       display: none;
@@ -141,7 +161,8 @@
       max-width: 540px;
       border-radius: 24px;
       overflow: hidden;
-      border: 3px solid var(--red);
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 70px rgba(192,38,211,0.5);
     }
 
     .close {
@@ -150,13 +171,19 @@
     }
 
     button.buy, .checkout-btn {
-      width: 100%; padding: 18px; background: linear-gradient(45deg, #e60000, #ff3333);
-      border: none; color: white; border-radius: 14px; margin-top: 15px;
-      font-weight: 800; font-size: 1.1em; transition: all 0.4s;
+      width: 100%; padding: 18px;
+      background: linear-gradient(45deg, var(--accent), #ff00aa);
+      border: none;
+      color: white;
+      border-radius: 14px;
+      margin-top: 15px;
+      font-weight: 800;
+      font-size: 1.1em;
+      transition: all 0.4s;
     }
 
     button.buy.added {
-      background: #00cc66 !important;
+      background: #22c55e !important;
       transform: scale(1.06);
     }
 
@@ -169,8 +196,8 @@
     footer {
       text-align: center;
       padding: 70px 20px 40px;
-      color: #555;
-      font-size: 0.92em;
+      color: #666;
+      font-size: 1em;
     }
   </style>
 </head>
@@ -199,7 +226,7 @@
 
   <!-- Магазин -->
   <div id="shop" class="section">
-    <h2 style="color:#ff3333; text-align:center; margin:20px 0 15px; font-size:2.3em;">КАТАЛОГ</h2>
+    <h2 style="color:#ff1a6b; text-align:center; margin:20px 0 15px; font-size:2.3em;">КАТАЛОГ</h2>
     <input type="text" id="search-input" class="search-bar" placeholder="Поиск по названию...">
     <div class="filters" id="filters"></div>
     <div class="product-grid" id="products"></div>
@@ -208,7 +235,7 @@
 
   <!-- О нас -->
   <div id="about" class="section">
-    <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">О нас</h2>
+    <h2 style="color:#ff1a6b; text-align:center; margin-bottom:30px;">О нас</h2>
     <p style="font-size:1.25em; line-height:1.7; max-width:720px; margin:0 auto; text-align:center;">
       DEAD Archive — это не просто магазин реплик.<br>
       Это целая команда людей, которые помогут тебе научится одеваться...<br>
@@ -218,12 +245,12 @@
 
   <!-- Поддержка -->
   <div id="support" class="section">
-    <h2 style="color:#ff3333; text-align:center; margin-bottom:30px;">Поддержка</h2>
+    <h2 style="color:#ff1a6b; text-align:center; margin-bottom:30px;">Поддержка</h2>
     <p style="font-size:1.3em; text-align:center; line-height:1.8;">
       Есть вопросы по заказу? Пиши мне напрямую.
     </p>
     <div style="text-align:center; margin-top:60px;">
-      <a href="https://t.me/sssdopsinn" target="_blank" style="color:#ff6666; font-size:1.6em; text-decoration:none; font-weight:bold;">
+      <a href="https://t.me/sssdopsinn" target="_blank" style="color:#ff00aa; font-size:1.6em; text-decoration:none; font-weight:bold;">
         → Написать в поддержку ←
       </a>
     </div>
@@ -231,7 +258,7 @@
 
   <!-- Корзина -->
   <div id="cart" class="section">
-    <h2 style="color:#ff3333; margin-bottom:25px;">Твоя корзина</h2>
+    <h2 style="color:#ff1a6b; margin-bottom:25px;">Твоя корзина</h2>
     <button onclick="clearCart()" style="margin-bottom:20px; padding:10px 20px; background:#333; border:none; color:#ddd; border-radius:8px;">Очистить корзину</button>
     <div id="cart-items"></div>
     <h3 style="margin:35px 0 20px; text-align:center;">
@@ -256,7 +283,7 @@
 
   <footer>
     © 2026 Dead Archive Shop<br>
-    <span style="color:#ff6666; font-size: 1.1em;">Создатель бота очень любит Дашу ❤️</span>
+    <span style="color:#ff00aa; font-size: 1.1em;">Создатель бота очень любит Дашу ❤️</span>
   </footer>
 
   <script>
@@ -309,8 +336,8 @@
         div.innerHTML = `
           <img src="${item.img[0]}" style="width:70px;height:70px;object-fit:cover;border-radius:10px;">
           <span style="flex:1;margin-left:15px;">${item.name}</span>
-          <span style="margin-right:15px;color:#ffaa44;">${item.price}$</span>
-          <button onclick="removeFromCart(${i})" style="color:#ff5555;background:none;border:none;font-size:26px;cursor:pointer;">✕</button>
+          <span style="margin-right:15px;color:#ff00aa;">${item.price}$</span>
+          <button onclick="removeFromCart(${i})" style="color:#ff1a6b;background:none;border:none;font-size:26px;cursor:pointer;">✕</button>
         `;
         container.appendChild(div);
       });
@@ -373,7 +400,7 @@
           <img src="${p.img[0]}">
           <div class="product-info">
             <h3>${p.name}</h3>
-            <p class="price">${p.price}$ <span style="color:#ffaa44">(${(p.price * USD_TO_UAH)} ₴)</span></p>
+            <p class="price">${p.price}$ <span style="color:#ff00aa">(${(p.price * USD_TO_UAH)} ₴)</span></p>
           </div>
         `;
         cont.appendChild(div);
@@ -389,7 +416,7 @@
         const btn = document.createElement('button');
         btn.textContent = i;
         btn.style.padding = "12px 20px";
-        btn.style.background = i === currentPage ? "#ff1a1a" : "#111";
+        btn.style.background = i === currentPage ? "#c026d3" : "#111";
         btn.style.border = "2px solid #444";
         btn.style.color = "#ddd";
         btn.style.borderRadius = "12px";
@@ -402,7 +429,7 @@
       currentProduct = p;
       document.getElementById('modal').style.display = 'flex';
       document.getElementById('modalName').textContent = p.name;
-      document.getElementById('modalPrice').innerHTML = `${p.price}$ <span style="color:#ffaa44">(${(p.price*USD_TO_UAH)} ₴)</span>`;
+      document.getElementById('modalPrice').innerHTML = `${p.price}$ <span style="color:#ff00aa">(${(p.price*USD_TO_UAH)} ₴)</span>`;
       document.getElementById('modalDesc').textContent = p.desc;
 
       const imgCont = document.getElementById('modalImages');
